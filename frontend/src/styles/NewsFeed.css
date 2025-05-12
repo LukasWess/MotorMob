@@ -1,0 +1,33 @@
+.news-feed {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.news-list {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+@media (min-width: 768px) {
+  .news-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.view-all-link {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+  border-top: 1px solid #eaeaea;
+}
+
+.view-all-link:hover {
+  background-color: #f8f8f8;
+}

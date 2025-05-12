@@ -1,0 +1,78 @@
+.driver-card {
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.driver-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.driver-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.driver-name {
+  font-size: 20px;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.status-active {
+  background-color: #e7f7ed;
+  color: #27ae60;
+}
+
+.status-inactive {
+  background-color: #f8d7da;
+  color: #e74c3c;
+}
+
+.status-on_leave {
+  background-color: #fff3cd;
+  color: #f39c12;
+}
+
+.driver-details {
+  margin-bottom: 15px;
+}
+
+.driver-details p {
+  margin: 8px 0;
+  color: #555;
+}
+
+.driver-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.driver-actions .btn {
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+}

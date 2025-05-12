@@ -1,0 +1,96 @@
+.top-drivers {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.drivers-list {
+  margin-top: 15px;
+}
+
+.driver-standing-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.driver-standing-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eaeaea;
+  transition: background-color 0.2s;
+}
+
+.driver-standing-item:hover {
+  background-color: #f8f8f8;
+}
+
+.driver-position {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1f1f1;
+  color: #333;
+  font-weight: bold;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.driver-info {
+  flex: 1;
+}
+
+.driver-name {
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.driver-team {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 3px 0;
+}
+
+.driver-series {
+  font-size: 0.75rem;
+  color: #888;
+  background-color: #f1f1f1;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.driver-points {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.points-value {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.points-label {
+  font-size: 0.7rem;
+  color: #999;
+}
+
+.view-all-link {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+  border-top: 1px solid #eaeaea;
+}
+
+.view-all-link:hover {
+  background-color: #f8f8f8;
+}

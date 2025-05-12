@@ -1,0 +1,153 @@
+.drivers-page {
+  padding-bottom: 40px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.drivers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.driver-card {
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.driver-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.driver-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.driver-name {
+  font-size: 20px;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.status-active {
+  background-color: #e7f7ed;
+  color: #27ae60;
+}
+
+.status-inactive {
+  background-color: #f8d7da;
+  color: #e74c3c;
+}
+
+.status-on_leave {
+  background-color: #fff3cd;
+  color: #f39c12;
+}
+
+.driver-details {
+  margin-bottom: 15px;
+}
+
+.driver-details p {
+  margin: 8px 0;
+  color: #555;
+}
+
+.driver-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.btn-danger {
+  background-color: #e74c3c;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+}
+
+.driver-form-container {
+  margin-bottom: 30px;
+}
+
+.driver-form-container h2 {
+  margin-bottom: 15px;
+  font-size: 22px;
+  color: #2c3e50;
+}
+
+.driver-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.driver-form .form-group:last-of-type {
+  grid-column: 1 / -1;
+}
+
+.driver-form button[type="submit"] {
+  grid-column: 1 / -1;
+  justify-self: end;
+  margin-top: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #444;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 18px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .driver-form {
+    grid-template-columns: 1fr;
+  }
+}

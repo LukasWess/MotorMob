@@ -1,0 +1,107 @@
+.upcoming-races {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.races-list {
+  margin-top: 15px;
+}
+
+.race-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eaeaea;
+  transition: background-color 0.2s;
+}
+
+.race-item:hover {
+  background-color: #f8f8f8;
+}
+
+.race-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+  margin-right: 15px;
+}
+
+.day {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e74c3c;
+}
+
+.time {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.race-info {
+  flex: 1;
+}
+
+.race-name {
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.race-circuit {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 3px 0;
+}
+
+.race-series {
+  font-size: 0.75rem;
+  color: #888;
+  background-color: #f1f1f1;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.race-action {
+  margin-left: 15px;
+}
+
+.btn-sm {
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-sm:hover {
+  background-color: #2980b9;
+}
+
+.view-all-link {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+  border-top: 1px solid #eaeaea;
+}
+
+.view-all-link:hover {
+  background-color: #f8f8f8;
+}

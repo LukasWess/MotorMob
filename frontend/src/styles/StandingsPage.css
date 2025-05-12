@@ -1,0 +1,174 @@
+.standings-page {
+  padding-bottom: 40px;
+}
+
+.page-header {
+  margin-bottom: 25px;
+}
+
+.page-header h1 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.standings-series-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 15px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.series-tab {
+  padding: 10px 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #555;
+  transition: all 0.2s;
+  flex: 1;
+  text-align: center;
+}
+
+.series-tab.active {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.standings-type-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  padding: 8px 15px;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #555;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.standings-table-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.standings-title {
+  background-color: #2c3e50;
+  color: white;
+  margin: 0;
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.standings-table th,
+.standings-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.standings-table th {
+  background-color: #f9f9f9;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.standings-table td.position {
+  font-weight: 600;
+  color: #2c3e50;
+  text-align: center;
+  width: 50px;
+}
+
+.standings-table td.name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.standings-table td.team,
+.standings-table td.nationality {
+  color: #666;
+}
+
+.standings-table td.points {
+  font-weight: 600;
+  color: #e74c3c;
+  text-align: center;
+}
+
+.standings-table td.wins {
+  text-align: center;
+  color: #2c3e50;
+}
+
+.standings-table tr.podium-position {
+  background-color: #f8f9fa;
+}
+
+.standings-table tr.podium-position:nth-child(1) td.position {
+  background-color: #f1c40f; /* Gold */
+  color: white;
+}
+
+.standings-table tr.podium-position:nth-child(2) td.position {
+  background-color: #bdc3c7; /* Silver */
+  color: white;
+}
+
+.standings-table tr.podium-position:nth-child(3) td.position {
+  background-color: #e67e22; /* Bronze */
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .standings-series-tabs {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .standings-type-tabs {
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .tab-btn {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .standings-table {
+    font-size: 14px;
+  }
+  
+  .standings-table th,
+  .standings-table td {
+    padding: 10px 8px;
+  }
+  
+  .standings-table th:nth-child(4),
+  .standings-table td:nth-child(4) {
+    display: none;
+  }
+}
