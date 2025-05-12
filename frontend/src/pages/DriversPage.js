@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { driverService } from '../services/api';
+import { driverService } from '../services/api.js';
 import DriverCard from '../components/DriverCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/DriversPage.css';

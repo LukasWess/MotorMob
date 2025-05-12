@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { driverService } from '../services/api';
+import { driverService } from '../services/api.js';
 import LoadingSpinner from './LoadingSpinner';
 
 function ConnectionTest() {

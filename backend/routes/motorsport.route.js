@@ -1,402 +1,363 @@
+// Motorsport API routes
 const express = require('express');
 const router = express.Router();
 const { images } = require('../data/images');
+const f1ApiService = require('../services/f1Api');
 
-// Mock data for motorsport endpoints
-const mockDrivers = {
-  "1": {
-    id: 1,
-    name: "Max Verstappen",
-    number: 1,
-    team: "Red Bull Racing",
-    nationality: "Netherlands",
-    dateOfBirth: "September 30, 1997",
-    biography: "Max Emilian Verstappen is a Belgian-Dutch racing driver currently competing in Formula One, under the Dutch flag, with Red Bull Racing. At the 2015 Australian Grand Prix, when he was aged 17 years, 166 days, he became the youngest driver to compete in Formula One.",
-    championships: 3,
-    wins: 62,
-    podiums: 105,
-    polePositions: 42,
-    fastestLaps: 32,
-    currentSeasonPoints: 125,
-    currentSeasonPosition: 1,
-    image: images.drivers.verstappen
-  },
-  "2": {
-    id: 2,
-    name: "Lewis Hamilton",
-    number: 44,
-    team: "Mercedes",
-    nationality: "United Kingdom",
-    dateOfBirth: "January 7, 1985",
-    biography: "Sir Lewis Carl Davidson Hamilton MBE is a British racing driver currently competing in Formula One for Mercedes. A seven-time World Drivers' Championship winner, he is widely regarded as one of the greatest drivers in the history of the sport.",
-    championships: 7,
-    wins: 103,
-    podiums: 191,
-    polePositions: 104,
-    fastestLaps: 61,
-    currentSeasonPoints: 110,
-    currentSeasonPosition: 2,
-    image: images.drivers.hamilton
-  },
-  "3": {
-    id: 3,
-    name: "Scott Dixon",
-    number: 9,
-    team: "Chip Ganassi Racing",
-    nationality: "New Zealand",
-    dateOfBirth: "July 22, 1980",
-    biography: "Scott Ronald Dixon is a New Zealand professional racing driver who competes in the NTT IndyCar Series for Chip Ganassi Racing. Dixon has won the IndyCar championship six times: in 2003, 2008, 2013, 2015, 2018 and 2020.",
-    championships: 6,
-    wins: 53,
-    podiums: 130,
-    polePositions: 32,
-    fastestLaps: 47,
-    currentSeasonPoints: 95,
-    currentSeasonPosition: 1,
-    image: images.drivers.dixon
-  }
-};
+// Import mock data
+const { 
+  mockDrivers, 
+  mockRaces, 
+  mockUpcomingRaces, 
+  mockStandings,
+  mockNews
+} = require('../data/mockData');
 
-const mockRaces = {
-  "1": {
-    id: 1,
-    name: "Monaco Grand Prix",
-    circuit: "Circuit de Monaco",
-    location: "Monte Carlo, Monaco",
-    date: "May 25, 2025",
-    time: "14:00",
-    status: "upcoming",
-    series: "Formula 1",
-    circuitLength: "3.337 km",
-    laps: 78,
-    distance: "260.286 km",
-    lapRecord: {
-      time: "1:12.909",
-      driver: "Lewis Hamilton",
-      year: 2021
-    },
-    circuitImage: images.circuits.monaco,
-    description: "The Monaco Grand Prix is a Formula One motor race held annually on the Circuit de Monaco on the last weekend in May. Run since 1929, it is widely considered to be one of the most important and prestigious automobile races in the world, alongside the Indianapolis 500 and the 24 Hours of Le Mans.",
-    previousWinners: [
-      { year: 2024, driver: "Max Verstappen", team: "Red Bull Racing" },
-      { year: 2023, driver: "Max Verstappen", team: "Red Bull Racing" },
-      { year: 2022, driver: "Sergio Perez", team: "Red Bull Racing" },
-      { year: 2021, driver: "Max Verstappen", team: "Red Bull Racing" },
-      { year: 2019, driver: "Lewis Hamilton", team: "Mercedes" }
-    ],
-    trackLayout: images.circuits.monaco,
-    weatherForecast: {
-      conditions: "Sunny",
-      temperature: "22°C",
-      precipitation: "0%",
-      windSpeed: "5 km/h"
+// GET driver profile
+router.get('/drivers/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Handle F1 drivers via F1 API
+    if (id.startsWith('f1-')) {
+      const driverId = id.replace('f1-', '');
+      try {
+        const driverData = await f1ApiService.getDriverInfo(driverId);
+        // Transform the data to match our application format
+        const transformedData = {
+          id: `f1-${driverData.id}`,
+          name: `${driverData.firstname} ${driverData.lastname}`,
+          number: driverData.number,
+          team: driverData.team?.name || 'Unknown Team',
+          nationality: driverData.nationality,
+          dateOfBirth: driverData.dateOfBirth,
+          biography: driverData.biography || `${driverData.firstname} ${driverData.lastname} is a Formula 1 driver currently competing for ${driverData.team?.name || 'Unknown Team'}.`,
+          championships: driverData.championships || 0,
+          wins: driverData.wins || 0,
+          podiums: driverData.podiums || 0,
+          polePositions: driverData.pole_positions || 0,
+          fastestLaps: driverData.fastest_laps || 0,
+          currentSeasonPoints: driverData.points || 0,
+          currentSeasonPosition: driverData.position || 0,
+          image: driverData.image || images.drivers.placeholder
+        };
+        return res.json(transformedData);
+      } catch (apiError) {
+        console.error('F1 API error:', apiError);
+        // Fall back to mock data if F1 API fails
+      }
     }
-  },
-  "2": {
-    id: 2,
-    name: "Indianapolis 500",
-    circuit: "Indianapolis Motor Speedway",
-    location: "Indianapolis, USA",
-    date: "May 26, 2025",
-    time: "12:00",
-    status: "upcoming",
-    series: "IndyCar",
-    circuitLength: "2.5 miles",
-    laps: 200,
-    distance: "500 miles",
-    lapRecord: {
-      time: "37.895 seconds",
-      driver: "Scott Dixon",
-      year: 2022
-    },
-    circuitImage: images.circuits.indianapolis,
-    description: "The Indianapolis 500 is an automobile race held annually at Indianapolis Motor Speedway in Speedway, Indiana, United States, an enclave suburb of Indianapolis. The event is traditionally held over Memorial Day weekend in late May. It is contested as part of the IndyCar Series, the top level of American championship car racing.",
-    previousWinners: [
-      { year: 2024, driver: "Scott Dixon", team: "Chip Ganassi Racing" },
-      { year: 2023, driver: "Josef Newgarden", team: "Team Penske" },
-      { year: 2022, driver: "Marcus Ericsson", team: "Chip Ganassi Racing" },
-      { year: 2021, driver: "Helio Castroneves", team: "Meyer Shank Racing" },
-      { year: 2020, driver: "Takuma Sato", team: "Rahal Letterman Lanigan Racing" }
-    ],
-    trackLayout: images.circuits.indianapolis,
-    weatherForecast: {
-      conditions: "Partly Cloudy",
-      temperature: "25°C",
-      precipitation: "10%",
-      windSpeed: "8 km/h"
+    
+    // Return mock data for non-F1 drivers or if F1 API fails
+    const driver = mockDrivers[id];
+    if (!driver) {
+      return res.status(404).json({ message: 'Driver not found' });
     }
-  },
-  "3": {
-    id: 3,
-    name: "Nürburgring 24 Hours",
-    circuit: "Nürburgring Nordschleife",
-    date: "June 1, 2025",
-    time: "15:30",
-    location: "Nürburg, Germany",
-    status: "upcoming",
-    series: "GT Racing",
-    circuitLength: "25.378 km",
-    laps: 100,
-    distance: "2537.8 km",
-    lapRecord: {
-      time: "8:10.914",
-      driver: "Timo Bernhard",
-      year: 2018
-    },
-    circuitImage: images.circuits.nurburgring,
-    description: "The 24 Hours Nürburgring is a 24-hour annual touring car and GT endurance racing event on the Nordschleife of the Nürburgring in central Germany. Held on a 25 km-long combination of the Nordschleife and the modern Grand Prix circuit, it is known for its challenging and demanding nature.",
-    previousWinners: [
-      { year: 2024, driver: "Raffaele Marciello", team: "Mercedes-AMG Team HRT" },
-      { year: 2023, driver: "Nicky Catsburg", team: "Rowe Racing" },
-      { year: 2022, driver: "Laurens Vanthoor", team: "Phoenix Racing" },
-      { year: 2021, driver: "Kelvin van der Linde", team: "Audi Sport Team Land" },
-      { year: 2020, driver: "Nick Yelloly", team: "ROWE Racing" }
-    ],
-    trackLayout: images.circuits.nurburgring,
-    weatherForecast: {
-      conditions: "Overcast",
-      temperature: "18°C",
-      precipitation: "30%",
-      windSpeed: "15 km/h"
+    res.json(driver);
+  } catch (error) {
+    console.error('Error fetching driver profile:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET championship standings
+router.get('/standings', async (req, res) => {
+  try {
+    const { series = 'all' } = req.query;
+    
+    // If specifically requesting F1 standings, use F1 API
+    if (series === 'f1') {
+      try {
+        const standingsData = await f1ApiService.getDriverStandings();
+        // Transform the data to match our application format
+        const transformedData = standingsData.map((driver, index) => ({
+          position: driver.position || index + 1,
+          driver: {
+            id: `f1-${driver.driver_id}`,
+            name: driver.driver_name,
+            nationality: driver.nationality
+          },
+          team: driver.team_name,
+          points: driver.points,
+          wins: driver.wins || 0,
+          series: 'Formula 1'
+        }));
+        return res.json(transformedData);
+      } catch (apiError) {
+        console.error('F1 API error:', apiError);
+        // Fall back to mock data if F1 API fails
+      }
     }
-  }
-};
-
-const mockUpcomingRaces = [
-  {
-    id: 1,
-    name: 'Monaco Grand Prix',
-    circuit: 'Circuit de Monaco',
-    date: 'May 25, 2025',
-    time: '14:00',
-    location: 'Monte Carlo, Monaco',
-    status: 'upcoming',
-    series: 'Formula 1'
-  },
-  {
-    id: 2,
-    name: 'Indianapolis 500',
-    circuit: 'Indianapolis Motor Speedway',
-    date: 'May 26, 2025',
-    time: '12:00',
-    location: 'Indianapolis, USA',
-    status: 'upcoming',
-    series: 'IndyCar'
-  },
-  {
-    id: 3,
-    name: 'Nürburgring 24 Hours',
-    circuit: 'Nürburgring Nordschleife',
-    date: 'June 1, 2025',
-    time: '15:30',
-    location: 'Nürburg, Germany',
-    status: 'upcoming',
-    series: 'GT Racing'
-  }
-];
-
-const mockTopDrivers = [
-  {
-    id: 1,
-    name: 'Max Verstappen',
-    team: 'Red Bull Racing',
-    points: 125,
-    position: 1,
-    nationality: 'Netherlands',
-    series: 'Formula 1',
-    image: images.drivers.verstappen
-  },
-  {
-    id: 2,
-    name: 'Lewis Hamilton',
-    team: 'Mercedes',
-    points: 110,
-    position: 2,
-    nationality: 'United Kingdom',
-    series: 'Formula 1',
-    image: images.drivers.hamilton
-  },
-  {
-    id: 3,
-    name: 'Scott Dixon',
-    team: 'Chip Ganassi Racing',
-    points: 95,
-    position: 1,
-    nationality: 'New Zealand',
-    series: 'IndyCar',
-    image: images.drivers.dixon
-  }
-];
-
-const mockNews = [
-  {
-    id: 1,
-    title: "Verstappen Extends Championship Lead With Monaco Victory",
-    excerpt: "Max Verstappen secured his fourth consecutive victory this season at the Monaco Grand Prix, extending his lead in the drivers' championship.",
-    date: "May 10, 2025",
-    source: "RacingNews",
-    imageUrl: images.news.placeholder
-  },
-  {
-    id: 2,
-    title: "Hamilton Signs Two-Year Contract Extension with Mercedes",
-    excerpt: "Seven-time world champion Lewis Hamilton has signed a two-year contract extension with Mercedes, ending speculation about his future.",
-    date: "May 9, 2025",
-    source: "F1 Insider",
-    imageUrl: images.news.placeholder
-  },
-  {
-    id: 3,
-    title: "IndyCar Introduces New Safety Measures for 2025 Season",
-    excerpt: "IndyCar has announced new safety measures that will be implemented for the remainder of the 2025 season following recent incidents.",
-    date: "May 8, 2025",
-    source: "Motorsport Today",
-    imageUrl: images.news.placeholder
-  },
-  {
-    id: 4,
-    title: "New Night Race Added to Formula 1 Calendar",
-    excerpt: "Formula 1 has announced a new night race in Thailand will be added to the calendar starting from the 2026 season.",
-    date: "May 7, 2025",
-    source: "RaceFans",
-    imageUrl: images.news.placeholder
-  }
-];
-
-// Get driver profile by ID
-router.get('/drivers/:id', (req, res) => {
-  const driver = mockDrivers[req.params.id];
-  if (!driver) {
-    return res.status(404).json({ error: 'Driver not found' });
-  }
-  res.json(driver);
-});
-
-// Get championship standings
-router.get('/standings', (req, res) => {
-  const { series } = req.query;
-  
-  let standings = mockTopDrivers;
-  
-  if (series && series !== 'all') {
-    standings = standings.filter(driver => driver.series.toLowerCase() === series.toLowerCase());
-  }
-  
-  res.json(standings);
-});
-
-// Get race results
-router.get('/races/:id/results', (req, res) => {
-  const race = mockRaces[req.params.id];
-  if (!race) {
-    return res.status(404).json({ error: 'Race not found' });
-  }
-  
-  // Mock race results
-  const results = [
-    { position: 1, driver: "Max Verstappen", team: "Red Bull Racing", time: "1:32:45.567", points: 25 },
-    { position: 2, driver: "Lewis Hamilton", team: "Mercedes", time: "+5.231s", points: 18 },
-    { position: 3, driver: "Charles Leclerc", team: "Ferrari", time: "+7.126s", points: 15 },
-    { position: 4, driver: "Carlos Sainz", team: "Ferrari", time: "+12.359s", points: 12 },
-    { position: 5, driver: "Lando Norris", team: "McLaren", time: "+14.752s", points: 10 }
-  ];
-  
-  res.json({
-    race,
-    results
-  });
-});
-
-// Get upcoming races
-router.get('/races/upcoming', (req, res) => {
-  const { limit } = req.query;
-  
-  let races = [...mockUpcomingRaces];
-  
-  if (limit) {
-    races = races.slice(0, parseInt(limit, 10));
-  }
-  
-  res.json(races);
-});
-
-// Get race details
-router.get('/races/:id', (req, res) => {
-  const race = mockRaces[req.params.id];
-  if (!race) {
-    return res.status(404).json({ error: 'Race not found' });
-  }
-  res.json(race);
-});
-
-// Get race calendar
-router.get('/calendar', (req, res) => {
-  const { series, year } = req.query;
-  
-  // Mock calendar data
-  const calendar = [
-    {
-      id: 1,
-      name: "Monaco Grand Prix",
-      circuit: "Circuit de Monaco",
-      date: "May 25, 2025",
-      location: "Monte Carlo, Monaco",
-      series: "Formula 1"
-    },
-    {
-      id: 2,
-      name: "Indianapolis 500",
-      circuit: "Indianapolis Motor Speedway",
-      date: "May 26, 2025",
-      location: "Indianapolis, USA",
-      series: "IndyCar"
-    },
-    {
-      id: 3,
-      name: "Nürburgring 24 Hours",
-      circuit: "Nürburgring Nordschleife",
-      date: "June 1, 2025",
-      location: "Nürburg, Germany",
-      series: "GT Racing"
-    },
-    {
-      id: 4,
-      name: "Australian Grand Prix",
-      circuit: "Albert Park Circuit",
-      date: "June 15, 2025",
-      location: "Melbourne, Australia",
-      series: "Formula 1"
-    },
-    {
-      id: 5,
-      name: "Chinese Grand Prix",
-      circuit: "Shanghai International Circuit",
-      date: "June 29, 2025",
-      location: "Shanghai, China",
-      series: "Formula 1"
+    
+    // Return mock data for other series or combined standings
+    let standings = [];
+    
+    if (series === 'all') {
+      // Combine standings from all series
+      Object.values(mockStandings).forEach(seriesStandings => {
+        standings = [...standings, ...seriesStandings];
+      });
+    } else {
+      // Return standings for specific series
+      standings = mockStandings[series] || [];
     }
-  ];
-  
-  let filteredCalendar = [...calendar];
-  
-  if (series && series !== 'all') {
-    filteredCalendar = filteredCalendar.filter(race => race.series.toLowerCase() === series.toLowerCase());
+    
+    res.json(standings);
+  } catch (error) {
+    console.error('Error fetching standings:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-  
-  res.json(filteredCalendar);
 });
 
-// Get latest news
-router.get('/news', (req, res) => {
-  const { limit } = req.query;
-  
-  let news = [...mockNews];
-  
-  if (limit) {
+// GET race results
+router.get('/races/:id/results', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Handle F1 race results via F1 API
+    if (id.startsWith('f1-')) {
+      const raceId = id.replace('f1-', '');
+      try {
+        const resultsData = await f1ApiService.getRaceResults(raceId);
+        // Transform the data to match our application format
+        const transformedData = {
+          id: `f1-${raceId}`,
+          name: resultsData.race_name,
+          date: resultsData.date,
+          circuit: resultsData.circuit_name,
+          results: resultsData.results.map((result, index) => ({
+            position: result.position,
+            driver: {
+              id: `f1-${result.driver_id}`,
+              name: result.driver_name,
+              nationality: result.nationality
+            },
+            team: result.team_name,
+            time: result.time,
+            status: result.status,
+            points: result.points,
+            fastestLap: result.fastest_lap === "1"
+          }))
+        };
+        return res.json(transformedData);
+      } catch (apiError) {
+        console.error('F1 API error:', apiError);
+        // Fall back to mock data if F1 API fails
+      }
+    }
+    
+    // Return mock data for non-F1 races or if F1 API fails
+    const race = mockRaces[id];
+    if (!race) {
+      return res.status(404).json({ message: 'Race not found' });
+    }
+    
+    // Check if race has results
+    if (race.status !== 'completed' || !race.result) {
+      return res.status(404).json({ message: 'Results not available for this race' });
+    }
+    
+    res.json({
+      id: race.id,
+      name: race.name,
+      date: race.date,
+      circuit: race.circuit,
+      results: race.results || []
+    });
+  } catch (error) {
+    console.error('Error fetching race results:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET upcoming races
+router.get('/races/upcoming', async (req, res) => {
+  try {
+    const { limit } = req.query;
+    
+    // Try to get F1 schedule from F1 API
+    let f1UpcomingRaces = [];
+    try {
+      const scheduleData = await f1ApiService.getSchedule();
+      // Filter for upcoming races
+      const currentDate = new Date();
+      f1UpcomingRaces = scheduleData
+        .filter(race => new Date(race.date) > currentDate)
+        .map(race => ({
+          id: `f1-${race.id}`,
+          name: race.name,
+          circuit: race.circuit_name,
+          date: race.date,
+          time: race.time || '14:00',
+          location: `${race.location}, ${race.country}`,
+          status: 'upcoming',
+          series: 'Formula 1',
+          thumbnail: race.circuit_image || images.circuits.placeholder
+        }));
+    } catch (apiError) {
+      console.error('F1 API error:', apiError);
+      // Continue with mock data if F1 API fails
+    }
+    
+    // Combine F1 data with other series data
+    let upcomingRaces = [...f1UpcomingRaces, ...mockUpcomingRaces];
+    
+    // Sort by date
+    upcomingRaces.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    // Apply limit if specified
+    if (limit) {
+      upcomingRaces = upcomingRaces.slice(0, parseInt(limit, 10));
+    }
+    
+    res.json(upcomingRaces);
+  } catch (error) {
+    console.error('Error fetching upcoming races:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET race calendar
+router.get('/calendar', async (req, res) => {
+  try {
+    const { series = 'all', year = new Date().getFullYear() } = req.query;
+    
+    // If specifically requesting F1 calendar, use F1 API
+    let f1Calendar = [];
+    if (series === 'all' || series === 'f1') {
+      try {
+        const scheduleData = await f1ApiService.getSchedule();
+        f1Calendar = scheduleData.map(race => ({
+          id: `f1-${race.id}`,
+          name: race.name,
+          circuit: race.circuit_name,
+          date: race.date,
+          time: race.time || '14:00',
+          location: `${race.location}, ${race.country}`,
+          status: new Date(race.date) < new Date() ? 'completed' : 'upcoming',
+          series: 'Formula 1',
+          thumbnail: race.circuit_image || images.circuits.placeholder
+        }));
+      } catch (apiError) {
+        console.error('F1 API error:', apiError);
+        // Continue with mock data if F1 API fails
+      }
+    }
+    
+    // For other series, use mock data
+    let calendar = [];
+    
+    if (series === 'all') {
+      // Combine all races from all series
+      calendar = [...f1Calendar, ...Object.values(mockRaces)];
+    } else if (series === 'f1') {
+      calendar = f1Calendar;
+    } else {
+      // Filter mock races by series
+      calendar = Object.values(mockRaces).filter(race => race.series.toLowerCase() === series.toLowerCase());
+    }
+    
+    // Sort by date
+    calendar.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    res.json(calendar);
+  } catch (error) {
+    console.error('Error fetching race calendar:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET latest news
+router.get('/news', async (req, res) => {
+  try {
+    const { limit = 10, category = 'all' } = req.query;
+    
+    // Filter news by category if specified
+    let news = mockNews;
+    if (category !== 'all') {
+      news = news.filter(item => item.category.toLowerCase() === category.toLowerCase());
+    }
+    
+    // Sort by date (newest first)
+    news.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Apply limit
     news = news.slice(0, parseInt(limit, 10));
+    
+    res.json(news);
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-  
-  res.json(news);
+});
+
+// GET race details
+router.get('/races/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Handle F1 race details via F1 API
+    if (id.startsWith('f1-')) {
+      const raceId = id.replace('f1-', '');
+      try {
+        const [raceData, circuitData] = await Promise.all([
+          f1ApiService.getSchedule().then(schedule => 
+            schedule.find(race => race.id === raceId)
+          ),
+          f1ApiService.getCircuitInfo(raceId)
+        ]);
+        
+        if (!raceData) {
+          return res.status(404).json({ message: 'Race not found' });
+        }
+        
+        // Transform the data to match our application format
+        const transformedData = {
+          id: `f1-${raceId}`,
+          name: raceData.name,
+          circuit: raceData.circuit_name,
+          location: `${raceData.location}, ${raceData.country}`,
+          date: raceData.date,
+          time: raceData.time || '14:00',
+          status: new Date(raceData.date) < new Date() ? 'completed' : 'upcoming',
+          series: 'Formula 1',
+          circuitLength: circuitData?.length || 'Unknown',
+          laps: circuitData?.laps || 'Unknown',
+          distance: circuitData?.distance || 'Unknown',
+          lapRecord: circuitData?.lap_record || {
+            time: 'Unknown',
+            driver: 'Unknown',
+            year: 'Unknown'
+          },
+          circuitImage: raceData.circuit_image || images.circuits.placeholder,
+          description: circuitData?.description || `The ${raceData.name} is held at ${raceData.circuit_name} in ${raceData.location}, ${raceData.country}.`,
+          previousWinners: circuitData?.previous_winners || [],
+          trackLayout: raceData.circuit_image || images.circuits.placeholder,
+          weatherForecast: {
+            conditions: 'Unknown',
+            temperature: 'Unknown',
+            precipitation: 'Unknown',
+            windSpeed: 'Unknown'
+          }
+        };
+        return res.json(transformedData);
+      } catch (apiError) {
+        console.error('F1 API error:', apiError);
+        // Fall back to mock data if F1 API fails
+      }
+    }
+    
+    // Return mock data for non-F1 races or if F1 API fails
+    const race = mockRaces[id];
+    if (!race) {
+      return res.status(404).json({ message: 'Race not found' });
+    }
+    
+    res.json(race);
+  } catch (error) {
+    console.error('Error fetching race details:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
 
 module.exports = router;

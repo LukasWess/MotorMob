@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { motorsportService } from '../services/api';
+import { motorsportService } from '../services/api.js';
 import { images } from '../assets/images';
 import '../styles/RaceDetailPage.css';
 

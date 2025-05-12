@@ -1,117 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { motorsportService } from '../services/api';
 import { images } from '../assets/images';
+import { mockRaceCalendar } from '../data/mockData';
 import '../styles/RacesPage.css';
 
 function RacesPage() {
   const [loading, setLoading] = useState(true);
   const [races, setRaces] = useState([]);
   const [activeTab, setActiveTab] = useState('upcoming');
-  const [error, setError] = useState(null);  useEffect(() => {
-    const fetchRaces = async () => {
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    // Simulate data fetching delay
+    setTimeout(() => {
       try {
-        setLoading(true);        // Try to get data from API
-        try {
-          const data = await motorsportService.getRaceCalendar();
-          setRaces(data);
-          setLoading(false);
-          return;
-        } catch (apiError) {
-          console.log('API not available, using mock data', apiError);
-          // If API fails, fall back to mock data
-        }
+        // Convert mockRaceCalendar entries to have status property
+        const currentDate = new Date();
+        const formattedRaces = mockRaceCalendar.map(race => ({
+          ...race,
+          status: new Date(race.date) > currentDate ? 'upcoming' : 'completed',
+          thumbnail: images.circuits[race.circuit.toLowerCase().replace(/\s+/g, '')] || 
+                    'https://via.placeholder.com/400x250?text=' + race.circuit
+        }));
         
-        // Set mock data if API fails with a short timeout to simulate API call
-        setTimeout(() => {
-          setRaces([
-            {
-              id: 2,
-              name: 'Indianapolis 500',
-              circuit: 'Indianapolis Motor Speedway',
-              date: 'May 26, 2025',
-              time: '12:00',
-              location: 'Indianapolis, USA',
-              status: 'upcoming',
-              series: 'IndyCar',
-              thumbnail: images.circuits?.indianapolis || '/assets/circuits/indianapolis.jpg',
-              details: {
-                circuitLength: '4.023 km',
-                laps: 200,
-                distance: '804.672 km',
-                lapRecord: {
-                  time: '37.895',
-                  driver: 'Scott Dixon',
-                  year: 2022
-                }
-              }
-            },
-            {
-              id: 3,
-              name: 'Nürburgring 24 Hours',
-              circuit: 'Nürburgring Nordschleife',
-              date: 'June 1, 2025',
-              time: '15:30',
-              location: 'Nürburg, Germany',
-              status: 'upcoming',
-              series: 'GT Racing',
-              thumbnail: images.circuits?.nurburgring || '/assets/circuits/nurburgring.jpg',
-              details: {
-                circuitLength: '25.378 km',
-                laps: null, // Variable depending on time
-                distance: null, // Distance covered in 24 hours
-                lapRecord: {
-                  time: '6:43.300',
-                  driver: 'Timo Bernhard',
-                  year: 2018
-                }
-              }
-            },
-            {
-              id: 4,
-              name: 'Australian Grand Prix',
-              circuit: 'Albert Park Circuit',
-              date: 'April 20, 2025',
-              time: '14:00',
-              location: 'Melbourne, Australia',
-              status: 'completed',
-              result: {
-                winner: 'Max Verstappen',
-                team: 'Red Bull Racing',
-                second: 'Lewis Hamilton',
-                third: 'Charles Leclerc'
-              },
-              series: 'Formula 1',
-              thumbnail: images.circuits?.melbourne || '/assets/circuits/melbourne.jpg'
-            },
-            {
-              id: 5,
-              name: 'Chinese Grand Prix',
-              circuit: 'Shanghai International Circuit',
-              date: 'April 27, 2025',
-              time: '14:00',
-              location: 'Shanghai, China',
-              status: 'completed',
-              result: {
-                winner: 'Lewis Hamilton',
-                team: 'Mercedes',
-                second: 'Max Verstappen',
-                third: 'George Russell'
-              },
-              series: 'Formula 1',
-              thumbnail: images.circuits?.shanghai || '/assets/circuits/shanghai.jpg'
-            }
-          ]);
-          setLoading(false);
-        }, 1000);
+        setRaces(formattedRaces);
+        setLoading(false);
       } catch (error) {
+        console.error('Error loading races:', error);
         setError('Failed to load races. Please try again later.');
         setLoading(false);
       }
-    };
-    
-    fetchRaces();
+    }, 800);
   }, []);
   
   const filteredRaces = races.filter(race => 
@@ -164,7 +84,7 @@ function RacesPage() {
                       </div>
                       <div className="race-detail-item">
                         <span className="detail-label">Time:</span>
-                        <span className="detail-value">{race.time}</span>
+                        <span className="detail-value">{race.time || '14:00'}</span>
                       </div>
                       <div className="race-detail-item">
                         <span className="detail-label">Location:</span>
@@ -177,16 +97,16 @@ function RacesPage() {
                           <div className="result-podium">
                             <div className="podium-position">
                               <span className="position">1</span>
-                              <span className="driver">{race.result.winner}</span>
-                              <span className="team">{race.result.team}</span>
+                              <span className="driver">{race.result?.winner || 'TBD'}</span>
+                              <span className="team">{race.result?.team || ''}</span>
                             </div>
                             <div className="podium-position">
                               <span className="position">2</span>
-                              <span className="driver">{race.result.second}</span>
+                              <span className="driver">{race.result?.second || 'TBD'}</span>
                             </div>
                             <div className="podium-position">
                               <span className="position">3</span>
-                              <span className="driver">{race.result.third}</span>
+                              <span className="driver">{race.result?.third || 'TBD'}</span>
                             </div>
                           </div>
                         </div>

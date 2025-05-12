@@ -5,7 +5,7 @@ import UpcomingRaces from '../components/UpcomingRaces';
 import TopDrivers from '../components/TopDrivers';
 import NewsFeed from '../components/NewsFeed';
 import { images } from '../assets/images';
-import { motorsportService } from '../services/api';
+import { mockUpcomingRaces, mockStandings } from '../data/mockData';
 import '../styles/HomePage.css';
 
 function HomePage() {
@@ -15,140 +15,96 @@ function HomePage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    // Simulate data fetching delay
+    setTimeout(() => {
       try {
-        setLoading(true);
-
-        // Try to get data from API
-        try {
-          // Fetch upcoming races and top drivers in parallel
-          const [racesData, driversData] = await Promise.all([
-            motorsportService.getUpcomingRaces(3),
-            motorsportService.getStandings()
-          ]);
-
-          setUpcomingRaces(racesData);
-          setTopDrivers(driversData);
-          setLoading(false);
-          return;
-        } catch (apiError) {
-          console.log('API not available, using mock data', apiError);
-          // If API fails, fall back to mock data
-        }
-
-        // Mock data as fallback
-        setTimeout(() => {
-          setUpcomingRaces([
-            {
-              id: 1,
-              name: 'Monaco Grand Prix',
-              circuit: 'Circuit de Monaco',
-              date: 'May 25, 2025',
-              time: '14:00',
-              location: 'Monte Carlo, Monaco',
-              status: 'upcoming',
-              series: 'Formula 1'
-            },
-            {
-              id: 2,
-              name: 'Indianapolis 500',
-              circuit: 'Indianapolis Motor Speedway',
-              date: 'May 26, 2025',
-              time: '12:00',
-              location: 'Indianapolis, USA',
-              status: 'upcoming',
-              series: 'IndyCar'
-            },
-            {
-              id: 3,
-              name: 'Nürburgring 24 Hours',
-              circuit: 'Nürburgring Nordschleife',
-              date: 'June 1, 2025',
-              time: '15:30',
-              location: 'Nürburg, Germany',
-              status: 'upcoming',
-              series: 'GT Racing'
-            }
-          ]);
-
-          setTopDrivers([
-            {
-              id: 1,
-              name: 'Max Verstappen',
-              team: 'Red Bull Racing',
-              points: 125,
-              position: 1,
-              nationality: 'Netherlands',
-              series: 'Formula 1'
-            },
-            {
-              id: 2,
-              name: 'Lewis Hamilton',
-              team: 'Mercedes',
-              points: 110,
-              position: 2,
-              nationality: 'United Kingdom',
-              series: 'Formula 1'
-            },
-            {
-              id: 3,
-              name: 'Scott Dixon',
-              team: 'Chip Ganassi Racing',
-              points: 95,
-              position: 1,
-              nationality: 'New Zealand',
-              series: 'IndyCar'
-            }
-          ]);
-          
-          setLoading(false);
-        }, 800);
+        // Use mock data
+        setUpcomingRaces(mockUpcomingRaces);
+        setTopDrivers(mockStandings);
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching homepage data:', error);
-        setError('Failed to load homepage data');
+        console.error('Error loading data:', error);
+        setError('Failed to load data. Please try again later.');
         setLoading(false);
       }
-    };
+    }, 800);
+  }, []);
 
-    fetchData();
-  }, []);  
   return (
     <div className="home-page">
-      <section className="hero motorsport-hero" style={{ backgroundImage: `url(${images.backgrounds.hero})` }}>
+      <div className="hero-section" style={{ backgroundImage: `url(${images.backgrounds.hero})` }}>
         <div className="hero-content">
-          <h1 className="hero-title">MotorMob</h1>
-          <p className="hero-subtitle">Your Comprehensive Motorsport Companion</p>
-          <div className="hero-buttons">
-            <Link to="/races" className="btn btn-primary hero-btn">Live Races</Link>
-            <Link to="/standings" className="btn btn-secondary hero-btn">Standings</Link>
+          <h1>Welcome to MotorMob</h1>
+          <p>Your ultimate destination for motorsport news, results, and stats</p>
+          <div className="hero-cta">
+            <Link to="/races" className="btn btn-primary">View Upcoming Races</Link>
+            <Link to="/standings" className="btn btn-secondary">Championship Standings</Link>
           </div>
         </div>
-      </section>
+      </div>
       
       {loading ? (
         <div className="loading-container">
           <div className="spinner"></div>
-          <p>Loading motorsport data...</p>
+          <p>Loading content...</p>
         </div>
       ) : error ? (
-        <div className="error-container">
-          <p className="error-message">{error}</p>
-          <button onClick={() => window.location.reload()} className="btn btn-primary">Retry</button>
+        <div className="error-message">
+          {error}
         </div>
       ) : (
-        <div className="dashboard-grid">
-          <UpcomingRaces races={upcomingRaces} />
-          <TopDrivers drivers={topDrivers} />
-          <NewsFeed />
+        <div className="dashboard">
+          <div className="dashboard-row">
+            <div className="dashboard-column upcoming-races-column">
+              <UpcomingRaces races={upcomingRaces} />
+            </div>
+            
+            <div className="dashboard-column news-column">
+              <NewsFeed />
+            </div>
+          </div>
+          
+          <div className="dashboard-row">
+            <div className="dashboard-column standings-column">
+              <TopDrivers drivers={topDrivers} />
+            </div>
+            
+            <div className="dashboard-column features-column">
+              <div className="features dashboard-card">
+                <h2 className="section-title">Features</h2>
+                <div className="feature-list">
+                  <div className="feature-item">
+                    <div className="feature-icon">🏁</div>
+                    <div className="feature-content">
+                      <h3>Live Race Updates</h3>
+                      <p>Get real-time updates during races including positions, lap times, and pit stops.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="feature-item">
+                    <div className="feature-icon">🔔</div>
+                    <div className="feature-content">
+                      <h3>Race Reminders</h3>
+                      <p>Never miss a race with customizable notifications and calendar integration.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="feature-item">
+                    <div className="feature-icon">⭐</div>
+                    <div className="feature-content">
+                      <h3>Favorite Drivers</h3>
+                      <p>Follow your favorite drivers and get personalized updates about their performance.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       
-      <section className="test section" style={{display: 'none'}}>
-        <div className="card">
-          <h2 className="section-title">System Status</h2>
-          <ConnectionTest />
-        </div>
-      </section>
+      {/* Uncomment to test API connection */}
+      {/* <ConnectionTest /> */}
     </div>
   );
 }
