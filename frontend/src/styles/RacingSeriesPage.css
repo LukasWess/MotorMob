@@ -1,0 +1,126 @@
+.racing-series-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-bottom: 50px;
+  background-color: #121212;
+  color: #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.page-header h1 {
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  font-size: 36px;
+}
+
+.subheading {
+  color: #adb5bd;
+  font-size: 18px;
+  margin: 0;
+}
+
+.series-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.series-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.series-card {
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-left: 5px solid; /* This will be colored dynamically */
+}
+
+.series-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.series-logo-container {
+  padding: 20px;
+  background-color: #262626;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.series-logo {
+  max-width: 100%;
+  height: auto;
+  max-height: 100px;
+}
+
+.series-info {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.series-name {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.series-description {
+  color: #adb5bd;
+  margin-bottom: 20px;
+}
+
+.series-stats {
+  display: flex;
+  margin-top: 15px;
+}
+
+.series-drivers-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e0e0e0;
+  font-size: 16px;
+}
+
+.series-action {
+  padding: 15px 20px;
+  background-color: #262626;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.view-drivers-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s ease;
+}
+
+.view-drivers-btn:hover {
+  transform: translateX(5px);
+}

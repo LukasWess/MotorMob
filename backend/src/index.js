@@ -81,7 +81,7 @@ app.delete('/drivers/:id', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 // Start the server
 async function startServer() {

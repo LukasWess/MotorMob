@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { images } from '../assets/images';
-import { mockRaceCalendar } from '../data/mockData';
+import { mockRacesBySeries, mockRacingSeries } from '../data/mockData';
 import '../styles/RacesPage.css';
 
 function RacesPage() {
+  const { seriesId } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [races, setRaces] = useState([]);
+  const [series, setSeries] = useState(null);
   const [activeTab, setActiveTab] = useState('upcoming');
   const [error, setError] = useState(null);
-  
-  useEffect(() => {
+    useEffect(() => {
+    // Find the series information
+    const currentSeries = mockRacingSeries.find(s => s.id === parseInt(seriesId));
+    if (!currentSeries) {
+      setError('Racing series not found');
+      setLoading(false);
+      return;
+    }
+    
+    setSeries(currentSeries);
+    
     // Simulate data fetching delay
     setTimeout(() => {
       try {
-        // Convert mockRaceCalendar entries to have status property
+        // Get races for this series
+        const seriesRaces = mockRacesBySeries[seriesId] || [];
+        
+        // Add status property to races
         const currentDate = new Date();
-        const formattedRaces = mockRaceCalendar.map(race => ({
+        const formattedRaces = seriesRaces.map(race => ({
           ...race,
           status: new Date(race.date) > currentDate ? 'upcoming' : 'completed',
-          thumbnail: images.circuits[race.circuit.toLowerCase().replace(/\s+/g, '')] || 
+          thumbnail: images.circuits[race.circuit?.toLowerCase().replace(/\s+/g, '')] || 
                     'https://via.placeholder.com/400x250?text=' + race.circuit
         }));
         
@@ -32,16 +47,24 @@ function RacesPage() {
         setLoading(false);
       }
     }, 800);
-  }, []);
+  }, [seriesId]);
   
   const filteredRaces = races.filter(race => 
     activeTab === 'upcoming' ? race.status === 'upcoming' : race.status === 'completed'
   );
-  
-  return (
+    return (
     <div className="races-page">
       <div className="page-header">
-        <h1>Races</h1>
+        <div className="header-left">
+          <button 
+            className="back-button"
+            onClick={() => navigate('/series')}
+            title="Back to series selection"
+          >
+            <i className="fas fa-arrow-left"></i> Back to Series
+          </button>
+        </div>
+        <h1>{series ? `${series.name} Races` : 'Races'}</h1>
         <div className="race-tabs">
           <button 
             className={`tab-btn ${activeTab === 'upcoming' ? 'active' : ''}`}

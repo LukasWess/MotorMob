@@ -5,7 +5,7 @@ echo Starting MotorMob development environment...
 start cmd /k "cd c:\Users\skrov\Desktop\MotorMob\backend && npm run dev"
 
 :: Wait for backend to initialize
-timeout /t 3 /nobreak > nul
+timeout /t 5 /nobreak > nul
 
 :: Start the frontend server in a new terminal window
 start cmd /k "cd c:\Users\skrov\Desktop\MotorMob\frontend && npm start"

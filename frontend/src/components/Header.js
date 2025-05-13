@@ -15,14 +15,13 @@ function Header() {
             <li className="nav-item">
               <Link to="/" className="nav-link">Home</Link>
             </li>
-            <li className="nav-item">
-              <Link to="/races" className="nav-link">Races</Link>
+            <li className="nav-item">              <Link to="/series" className="nav-link">Races</Link>
             </li>
             <li className="nav-item">
-              <Link to="/standings" className="nav-link">Standings</Link>
+              <Link to="/series" className="nav-link">Standings</Link>
             </li>
             <li className="nav-item">
-              <Link to="/drivers" className="nav-link">Drivers</Link>
+              <Link to="/series" className="nav-link">Drivers</Link>
             </li>
           </ul>
         </nav>

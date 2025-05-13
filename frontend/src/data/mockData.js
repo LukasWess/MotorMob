@@ -12,13 +12,14 @@ export const mockDrivers = [
     dateOfBirth: "September 30, 1997",
     biography: "Max Emilian Verstappen is a Belgian-Dutch racing driver currently competing in Formula One, under the Dutch flag, with Red Bull Racing. At the 2015 Australian Grand Prix, when he was aged 17 years, 166 days, he became the youngest driver to compete in Formula One.",
     championships: 3,
-    wins: 62,
+    wins: 54,
     podiums: 105,
     polePositions: 42,
     fastestLaps: 32,
     currentSeasonPoints: 125,
     currentSeasonPosition: 1,
-    image: 'https://via.placeholder.com/200x200?text=Verstappen'
+    image: 'https://via.placeholder.com/200x200?text=Verstappen',
+    seriesId: 1
   },
   {
     id: 2,
@@ -31,24 +32,23 @@ export const mockDrivers = [
     championships: 7,
     wins: 103,
     podiums: 191,
-    polePositions: 104,
-    fastestLaps: 61,
+    polePositions: 104,    fastestLaps: 61,
     currentSeasonPoints: 110,
     currentSeasonPosition: 2,
-    image: 'https://via.placeholder.com/200x200?text=Hamilton'
+    image: 'https://via.placeholder.com/200x200?text=Hamilton',
+    seriesId: 1
   },
   {
     id: 3,
     name: "Scott Dixon",
     number: 9,
-    team: "Chip Ganassi Racing",
-    nationality: "New Zealand",
+    team: "Chip Ganassi Racing",    nationality: "New Zealand",
     dateOfBirth: "July 22, 1980",
     biography: "Scott Ronald Dixon is a New Zealand professional racing driver who competes in the NTT IndyCar Series for Chip Ganassi Racing. Dixon has won the IndyCar championship six times: in 2003, 2008, 2013, 2015, 2018 and 2020.",
     championships: 6,
     wins: 53,
-    podiums: 130,
-    polePositions: 32,
+    podiums: 130,    polePositions: 32,
+    seriesId: 2,
     fastestLaps: 47,
     currentSeasonPoints: 95,
     currentSeasonPosition: 1,
@@ -290,8 +290,137 @@ export const mockRaceCalendar = [
     id: 5,
     name: "Chinese Grand Prix",
     circuit: "Shanghai International Circuit",
-    date: "June 29, 2025",
-    location: "Shanghai, China",
+    date: "June 29, 2025",    location: "Shanghai, China",
     series: "Formula 1"
   }
 ];
+
+// Mock racing series data
+export const mockRacingSeries = [
+  {
+    id: 1,
+    name: "Formula 1",
+    shortName: "F1",
+    description: "The pinnacle of motorsport, featuring the fastest circuit racing cars in the world.",
+    logo: "https://via.placeholder.com/300x150?text=Formula+1",
+    primaryColor: "#e10600", // F1 red
+    driversCount: 20
+  },
+  {
+    id: 2,
+    name: "IndyCar Series",
+    shortName: "IndyCar",
+    description: "The premier level of open-wheel racing in North America, known for its high-speed oval races and road courses.",
+    logo: "https://via.placeholder.com/300x150?text=IndyCar",
+    primaryColor: "#1447b5", // IndyCar blue
+    driversCount: 24
+  },
+  {
+    id: 3,
+    name: "NASCAR Cup Series",
+    shortName: "NASCAR",
+    description: "America's most popular stock car racing championship, featuring close racing and high-speed ovals.",
+    logo: "https://via.placeholder.com/300x150?text=NASCAR",
+    primaryColor: "#ffd659", // NASCAR yellow
+    driversCount: 36
+  },
+  {
+    id: 4,
+    name: "Formula E",
+    shortName: "FE",
+    description: "An electric street racing series showcasing innovation and sustainability in motorsport.",
+    logo: "https://via.placeholder.com/300x150?text=Formula+E",    primaryColor: "#14b5a0", // Formula E teal
+    driversCount: 22
+  }
+];
+
+// Mock races for each racing series
+export const mockRacesBySeries = {
+  // Formula 1 races (seriesId: 1)
+  1: [
+    {
+      id: 101,
+      name: "Monaco Grand Prix",
+      circuit: "Circuit de Monaco",
+      date: "May 25, 2025",
+      location: "Monte Carlo, Monaco",
+      image: "https://via.placeholder.com/400x250?text=Monaco"
+    },
+    {
+      id: 102,
+      name: "Australian Grand Prix",
+      circuit: "Albert Park Circuit",
+      date: "June 15, 2025",
+      location: "Melbourne, Australia",
+      image: "https://via.placeholder.com/400x250?text=Melbourne"
+    },
+    {
+      id: 103,
+      name: "Chinese Grand Prix",
+      circuit: "Shanghai International Circuit",
+      date: "June 29, 2025",
+      location: "Shanghai, China",
+      image: "https://via.placeholder.com/400x250?text=Shanghai"
+    }
+  ],
+  
+  // IndyCar races (seriesId: 2)
+  2: [
+    {
+      id: 201,
+      name: "Indianapolis 500",
+      circuit: "Indianapolis Motor Speedway",
+      date: "May 26, 2025",
+      location: "Indianapolis, USA",
+      image: "https://via.placeholder.com/400x250?text=Indianapolis"
+    },
+    {
+      id: 202,
+      name: "Long Beach Grand Prix",
+      circuit: "Long Beach Street Circuit",
+      date: "June 7, 2025",
+      location: "Long Beach, California, USA",
+      image: "https://via.placeholder.com/400x250?text=LongBeach"
+    }
+  ],
+  
+  // NASCAR races (seriesId: 3)
+  3: [
+    {
+      id: 301,
+      name: "Daytona 500",
+      circuit: "Daytona International Speedway",
+      date: "May 22, 2025",
+      location: "Daytona Beach, Florida, USA",
+      image: "https://via.placeholder.com/400x250?text=Daytona"
+    },
+    {
+      id: 302,
+      name: "Coca-Cola 600",
+      circuit: "Charlotte Motor Speedway",
+      date: "June 12, 2025",
+      location: "Concord, North Carolina, USA",
+      image: "https://via.placeholder.com/400x250?text=Charlotte"
+    }
+  ],
+  
+  // Formula E races (seriesId: 4)
+  4: [
+    {
+      id: 401,
+      name: "London E-Prix",
+      circuit: "ExCeL London Circuit",
+      date: "May 30, 2025",
+      location: "London, UK",
+      image: "https://via.placeholder.com/400x250?text=London"
+    },
+    {
+      id: 402,
+      name: "Monaco E-Prix",
+      circuit: "Circuit de Monaco",
+      date: "June 20, 2025",
+      location: "Monte Carlo, Monaco",
+      image: "https://via.placeholder.com/400x250?text=MonacoE"
+    }
+  ]
+};

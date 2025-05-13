@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { motorsportService } from '../services/api.js';
 import { images } from '../assets/images';
+// Import mockDrivers directly - we'll use other methods to ensure refreshing
+import { mockDrivers } from '../data/mockData';
 import '../styles/DriverProfilePage.css';
 
 function DriverProfilePage() {
@@ -10,90 +12,49 @@ function DriverProfilePage() {
   const [driver, setDriver] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  useEffect(() => {
-    const fetchDriverProfile = async () => {
+  
+  // Simple function to refresh data
+  const refreshData = () => {
+    setLoading(true);
+    fetchDriverProfile();
+  };
+  
+  // Function to fetch driver data (either from API or mockData)
+  const fetchDriverProfile = async () => {
+    try {
+      // Try API first
       try {
-        setLoading(true);
-        // Try to get data from API first
-        try {
-          const data = await motorsportService.getDriverProfile(id);
-          setDriver(data);
-          setLoading(false);
-          return;
-        } catch (apiError) {
-          console.log('API not available, using mock data', apiError);
-          // If API fails, fall back to mock data
-        }
-
-        // Mock data as fallback
-        setTimeout(() => {          const mockDrivers = {
-            "1": {
-              id: 1,
-              name: "Max Verstappen",
-              number: 1,
-              team: "Red Bull Racing",
-              nationality: "Netherlands",
-              dateOfBirth: "September 30, 1997",
-              biography: "Max Emilian Verstappen is a Belgian-Dutch racing driver currently competing in Formula One, under the Dutch flag, with Red Bull Racing. At the 2015 Australian Grand Prix, when he was aged 17 years, 166 days, he became the youngest driver to compete in Formula One.",
-              championships: 3,
-              wins: 62,
-              podiums: 105,
-              polePositions: 42,
-              fastestLaps: 32,
-              currentSeasonPoints: 125,
-              currentSeasonPosition: 1,
-              image: images.drivers.verstappen
-            },            "2": {
-              id: 2,
-              name: "Lewis Hamilton",
-              number: 44,
-              team: "Mercedes",
-              nationality: "United Kingdom",
-              dateOfBirth: "January 7, 1985",
-              biography: "Sir Lewis Carl Davidson Hamilton MBE is a British racing driver currently competing in Formula One for Mercedes. A seven-time World Drivers' Championship winner, he is widely regarded as one of the greatest drivers in the history of the sport.",
-              championships: 7,
-              wins: 103,
-              podiums: 191,
-              polePositions: 104,
-              fastestLaps: 61,
-              currentSeasonPoints: 110,
-              currentSeasonPosition: 2,
-              image: images.drivers.hamilton
-            },            "3": {
-              id: 3,
-              name: "Scott Dixon",
-              number: 9,
-              team: "Chip Ganassi Racing",
-              nationality: "New Zealand",
-              dateOfBirth: "July 22, 1980",
-              biography: "Scott Ronald Dixon is a New Zealand professional racing driver who competes in the NTT IndyCar Series for Chip Ganassi Racing. Dixon has won the IndyCar championship six times: in 2003, 2008, 2013, 2015, 2018 and 2020.",
-              championships: 6,
-              wins: 53,
-              podiums: 130,
-              polePositions: 32,
-              fastestLaps: 47,
-              currentSeasonPoints: 95,
-              currentSeasonPosition: 1,
-              image: images.drivers.dixon
-            }
-          };
-
-          if (mockDrivers[id]) {
-            setDriver(mockDrivers[id]);
-            setLoading(false);
-          } else {
-            setError("Driver not found");
-            setLoading(false);
-          }
-        }, 800); // Simulate loading delay
-      } catch (error) {
-        setError("Failed to load driver profile");
+        const data = await motorsportService.getDriverProfile(id);
+        setDriver(data);
+        setLoading(false);
+        return;
+      } catch (apiError) {
+        console.log('API not available, using mock data', apiError);
+      }
+      
+      // Fall back to mock data if API fails
+      // This will always use the latest imported mockDrivers from the module
+      const driverFound = mockDrivers.find(driver => driver.id.toString() === id);
+      
+      if (driverFound) {
+        console.log('Using mock data for driver:', driverFound.name);
+        setDriver({ ...driverFound }); // Clone to ensure we have a fresh object
+        setLoading(false);
+      } else {
+        setError("Driver not found");
         setLoading(false);
       }
-    };
-
+    } catch (error) {
+      console.error('Error loading driver profile:', error);
+      setError("Failed to load driver profile");
+      setLoading(false);
+    }
+  };
+  
+  // Initial data fetch
+  useEffect(() => {
     fetchDriverProfile();
-  }, [id]);
+  }, [id]); // Only re-run when ID changes
 
   if (loading) {
     return <div className="driver-profile-page loading-container"><LoadingSpinner /></div>;
@@ -108,16 +69,23 @@ function DriverProfilePage() {
       </div>
     );
   }
-
   return (
     <div className="driver-profile-page">
       <div className="profile-header">
+        {/* Moved the back-button-container outside of profile-header-content */}
+        <div className="back-button-container">
+          <Link to="/drivers" className="back-button">
+            <i className="fas fa-arrow-left"></i> Back to Drivers
+          </Link>
+          <button 
+            onClick={refreshData} 
+            className="refresh-button"
+            title="Reload driver data"
+          >
+            <i className="fas fa-sync"></i> Refresh Data
+          </button>
+        </div>
         <div className="profile-header-content">
-          <div className="back-button-container">
-            <Link to="/drivers" className="back-button">
-              <i className="fas fa-arrow-left"></i> Back to Drivers
-            </Link>
-          </div>
           <div className="driver-image-container">
             <div className="driver-number">{driver.number}</div>            <div 
               className="driver-image" 
@@ -174,22 +142,21 @@ function DriverProfilePage() {
           
           <div className="personal-info-section">
             <h2>Personal Information</h2>
-            <div className="info-grid">
-              <div className="info-item">
+            <div className="info-grid">              <div className="info-item">
                 <div className="info-label">Date of Birth</div>
-                <div className="info-value">{driver.dateOfBirth}</div>
+                <div className="info-value" style={{ color: '#ffffff' }}>{driver.dateOfBirth}</div>
               </div>
               <div className="info-item">
                 <div className="info-label">Nationality</div>
-                <div className="info-value">{driver.nationality}</div>
+                <div className="info-value" style={{ color: '#ffffff' }}>{driver.nationality}</div>
               </div>
               <div className="info-item">
                 <div className="info-label">Racing Number</div>
-                <div className="info-value">{driver.number}</div>
+                <div className="info-value" style={{ color: '#ffffff' }}>{driver.number}</div>
               </div>
               <div className="info-item">
                 <div className="info-label">Current Team</div>
-                <div className="info-value">{driver.team}</div>
+                <div className="info-value" style={{ color: '#ffffff' }}>{driver.team}</div>
               </div>
             </div>
           </div>
@@ -261,8 +228,37 @@ function DriverProfilePage() {
               </tbody>
             </table>
           </div>
+        </div>      </div>
+        {/* Development indicator to show when data was last loaded */}
+      {process.env.NODE_ENV !== 'production' && (
+        <div className="dev-indicator" style={{ 
+          marginTop: '20px', 
+          fontSize: '12px', 
+          color: '#adb5bd', 
+          textAlign: 'center',
+          background: '#262626',
+          padding: '10px',
+          borderRadius: '8px',
+          border: '1px solid #333'
+        }}>
+          <p>Data refreshed at: {new Date().toLocaleTimeString()}</p>
+          <p>Driver ID: {driver.id} | Name: {driver.name}</p>
+          <button 
+            onClick={refreshData}            style={{ 
+              fontSize: '12px', 
+              padding: '3px 10px', 
+              cursor: 'pointer',
+              background: '#1e1e1e',
+              color: '#ff6b6b',
+              border: '1px solid #ff6b6b',
+              borderRadius: '4px',
+              marginTop: '5px'
+            }}
+          >
+            Manual Refresh
+          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

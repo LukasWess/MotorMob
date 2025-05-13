@@ -2,6 +2,11 @@
   max-width: 1200px;
   margin: 0 auto;
   padding-bottom: 50px;
+  background-color: #121212; /* Dark background */
+  color: #e0e0e0; /* Light text */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .loading-container,
@@ -13,20 +18,39 @@
   align-items: center;
   text-align: center;
   padding: 20px;
+  background-color: #121212;
+  color: #e0e0e0;
 }
 
 .error-container h2 {
-  color: #e74c3c;
+  color: #ff6b6b; /* Brighter red on dark background */
   margin-bottom: 15px;
 }
 
+/* Remove the duplicate .back-button-container class as it's redefined below */
+
+.refresh-button {
+  background: none;
+  border: none;
+  color: #ff6b6b; /* Changed from blue to red accent */
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 0.9em;
+  transition: color 0.2s;
+  margin-left: 15px; /* Add more spacing from the back button */
+}
+
+.refresh-button:hover {
+  color: #ff8585; /* Lighter red on hover */
+}
+
 .profile-header {
-  background: linear-gradient(to right, #1a1a1a, #333);
+  background: linear-gradient(to right, #0a0a0a, #1e1e1e); /* Darker gradient */
   color: white;
-  padding: 30px 20px;
+  padding: 40px 20px 30px 20px; /* Reduced top padding */
   margin-bottom: 30px;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -36,9 +60,8 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(to right, #e74c3c, #f39c12);
+  right: 0;  height: 4px;
+  background: linear-gradient(to right, #ff6b6b, #A00000); /* Red to darker red gradient */
 }
 
 .profile-header-content {
@@ -51,35 +74,49 @@
   .profile-header-content {
     flex-direction: row;
     align-items: flex-start;
+    position: relative;
+    padding-top: 40px; /* Add space for the buttons at the top */
   }
 }
 
 .back-button-container {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* Reduced margin to tighten spacing */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Space out buttons */
+  z-index: 100; /* Ensure it stays on top */
 }
 
 @media (min-width: 768px) {
   .back-button-container {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    width: auto;
+    top: 0; /* Position at the top */
+    left: 0;
+    width: 100%; /* Take full width */
     margin-bottom: 0;
+    z-index: 100; /* Ensure it stays on top */
+    padding: 10px 10px 10px 0; /* Add some padding */
+    background-color: rgba(10, 10, 10, 0.7); /* Semi-transparent background */
+    border-radius: 8px 8px 0 0; /* Rounded corners on top */
   }
 }
 
 .back-button {
   display: inline-flex;
   align-items: center;
-  color: white;
+  color: #e0e0e0; /* Light color for better visibility */
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.3); /* Slight background for better visibility */
 }
 
 .back-button:hover {
-  color: #e74c3c;
+  color: #ff6b6b; /* Brighter red on hover */
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .back-button i {
@@ -104,8 +141,8 @@
   border-radius: 50%;
   background-size: cover;
   background-position: center;
-  border: 4px solid #e74c3c;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 4px solid #ff6b6b; /* Brighter red border */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .driver-number {
@@ -114,7 +151,7 @@
   right: -10px;
   width: 40px;
   height: 40px;
-  background-color: #e74c3c;
+  background-color: #ff6b6b; /* Brighter red */
   color: white;
   border-radius: 50%;
   display: flex;
@@ -122,11 +159,11 @@
   justify-content: center;
   font-weight: bold;
   font-size: 18px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 .driver-nationality {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
   color: white;
   text-align: center;
   padding: 5px 10px;
@@ -180,7 +217,7 @@
 .stat-value {
   font-size: 1.8rem;
   font-weight: 600;
-  color: #e74c3c;
+  color: #ff6b6b; /* Brighter red for dark theme */
 }
 
 .stat-label {
@@ -212,29 +249,32 @@
 }
 
 .stat-card {
-  background-color: white;
+  background-color: #1e1e1e; /* Dark background for cards */
   border-radius: 8px;
   padding: 15px;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s;
+  border-left: 3px solid #ff6b6b; /* Red accent */
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-left-color: #ff8585; /* Lighter red accent on hover */
 }
 
 .stat-card .stat-value {
   font-size: 2rem;
+  color: #fff; /* White text for better visibility */
 }
 
 .driver-details {
-  background-color: white;
+  background-color: #1e1e1e; /* Dark background */
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .biography-section {
@@ -245,15 +285,15 @@
 .personal-info-section h2,
 .season-results h2 {
   font-size: 1.5rem;
-  color: #333;
+  color: #e0e0e0; /* Light text color */
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid #333; /* Darker border */
 }
 
 .biography-section p {
   line-height: 1.6;
-  color: #555;
+  color: #cccccc; /* Light gray text */
 }
 
 .info-grid {
@@ -270,26 +310,27 @@
 
 .info-item {
   padding: 10px;
-  background-color: #f8f8f8;
+  background-color: #262626; /* Dark gray background */
   border-radius: 6px;
+  border-left: 2px solid #ff6b6b; /* Changed from blue to red accent to match theme */
 }
 
 .info-label {
   font-size: 0.85rem;
-  color: #888;
+  color: #adb5bd; /* Light gray color */
   margin-bottom: 5px;
 }
 
 .info-value {
   font-weight: 600;
-  color: #333;
+  color: #ffffff !important; /* Force white color with !important */
 }
 
 .season-results {
-  background-color: white;
+  background-color: #1e1e1e; /* Dark background */
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .results-table-container {
@@ -303,24 +344,35 @@
 }
 
 .results-table th {
-  background-color: #f1f1f1;
+  background-color: #262626; /* Dark header */
   padding: 12px 15px;
   text-align: left;
   font-weight: 600;
-  color: #333;
+  color: #e0e0e0; /* Light text */
+  border-bottom: 2px solid #333;
 }
 
 .results-table td {
   padding: 12px 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #333; /* Darker border */
+  color: #e0e0e0; /* Light text */
 }
 
 .results-table tbody tr:hover {
-  background-color: #f9f9f9;
+  background-color: #2c2c2c; /* Slightly lighter background on hover */
 }
 
 .results-table td:nth-child(3),
 .results-table td:nth-child(4),
 .results-table td:nth-child(5) {
   text-align: center;
+}
+
+/* Add some style to the development indicator at the bottom */
+.dev-indicator {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 30px;
+  border-top: 2px solid #333;
 }

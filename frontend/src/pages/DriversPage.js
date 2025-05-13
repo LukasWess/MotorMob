@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { driverService } from '../services/api.js';
+import { mockDrivers, mockRacingSeries } from '../data/mockData';
 import DriverCard from '../components/DriverCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/DriversPage.css';
 
 function DriversPage() {
+  const { seriesId } = useParams();
+  const navigate = useNavigate();
   const [drivers, setDrivers] = useState([]);
+  const [series, setSeries] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -16,18 +21,41 @@ function DriversPage() {
     email: '',
     status: 'active'
   });
-
   // Fetch all drivers when component mounts
   useEffect(() => {
+    // Find the series information
+    const currentSeries = mockRacingSeries.find(s => s.id === parseInt(seriesId));
+    if (!currentSeries) {
+      setError('Racing series not found');
+      setLoading(false);
+      return;
+    }
+    
+    setSeries(currentSeries);
     fetchDrivers();
-  }, []);
-
+  }, [seriesId]);
+  
   // Function to fetch drivers from API
   const fetchDrivers = async () => {
     try {
       setLoading(true);
-      const data = await driverService.getAllDrivers();
-      setDrivers(data);
+      // Try API first
+      try {
+        const data = await driverService.getAllDrivers();
+        // Filter by series ID
+        const filteredData = data.filter(driver => driver.seriesId === parseInt(seriesId));
+        setDrivers(filteredData);
+        setError(null);
+        setLoading(false);
+        return;
+      } catch (apiError) {
+        console.log('API not available, using mock data', apiError);
+      }
+      
+      // Fall back to mock data if API fails
+      console.log('Using mock drivers data');
+      const filteredMockDrivers = mockDrivers.filter(driver => driver.seriesId === parseInt(seriesId));
+      setDrivers(filteredMockDrivers);
       setError(null);
     } catch (err) {
       setError('Failed to load drivers. Please try again later.');
@@ -83,18 +111,35 @@ function DriversPage() {
         setLoading(false);
       }
     }
-  };
-
-  return (
+  };  return (
     <div className="drivers-page">
       <div className="page-header">
-        <h1>Drivers</h1>
-        <button 
-          className="btn btn-primary" 
-          onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? 'Cancel' : 'Add New Driver'}
-        </button>
+        <div className="header-left">
+          <button 
+            className="back-button"
+            onClick={() => navigate('/series')}
+            title="Back to series selection"
+          >
+            <i className="fas fa-arrow-left"></i> Back to Series
+          </button>
+        </div>
+        <h1>{series ? `${series.name} Drivers` : 'Drivers'}</h1>
+        <div className="header-right">
+          <button 
+            className="refresh-button"
+            onClick={fetchDrivers}
+            title="Reload drivers data"
+          >
+            <i className="fas fa-sync"></i> Refresh Data
+          </button>
+          <button 
+            className="btn btn-primary" 
+            onClick={() => setShowForm(!showForm)}
+            style={{ marginLeft: '15px' }}
+          >
+            {showForm ? 'Cancel' : 'Add New Driver'}
+          </button>
+        </div>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
@@ -181,7 +226,10 @@ function DriversPage() {
         <>
           {drivers.length === 0 ? (
             <div className="empty-state">
-              <p>No drivers found. Add your first driver to get started.</p>
+              <p>No drivers found. Click the refresh button or check your connection.</p>
+              <button onClick={fetchDrivers} className="btn btn-primary" style={{marginTop: '15px'}}>
+                <i className="fas fa-sync"></i> Refresh Data
+              </button>
             </div>
           ) : (
             <div className="drivers-grid">

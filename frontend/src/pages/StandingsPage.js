@@ -1,17 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { mockRacingSeries } from '../data/mockData';
 import '../styles/StandingsPage.css';
 
 function StandingsPage() {
+  const { seriesId } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [standings, setStandings] = useState({});
-  const [activeSeries, setActiveSeries] = useState('formula1');
+  const [series, setSeries] = useState(null);
   const [activeTab, setActiveTab] = useState('drivers');
+  const [error, setError] = useState(null);
   
-  // Sample standings data - would normally come from an API
+  // Fetch standings data when component mounts
   useEffect(() => {
+    // Find the series information
+    const currentSeries = mockRacingSeries.find(s => s.id === parseInt(seriesId));
+    if (!currentSeries) {
+      setError('Racing series not found');
+      setLoading(false);
+      return;
+    }
+    
+    setSeries(currentSeries);
+    
     // Simulating API call
     setTimeout(() => {
+      // The mapping of our series IDs to the standings data keys
+      const seriesMapping = {
+        1: 'formula1',   // F1
+        2: 'indycar',    // IndyCar
+        3: 'nascar',     // NASCAR (new)
+        4: 'formula_e'   // Formula E (new)
+      };
+      
+      const seriesKey = seriesMapping[seriesId] || 'formula1';
+      
       setStandings({
         formula1: {
           drivers: [
@@ -48,87 +73,84 @@ function StandingsPage() {
             { position: 3, team: 'Andretti Autosport', points: 140, wins: 0 }
           ]
         },
-        wec: {
+        nascar: {
           drivers: [
-            { position: 1, driver: 'Sébastien Buemi', team: 'Toyota Gazoo Racing', points: 105, nationality: 'Switzerland', wins: 2 },
-            { position: 2, driver: 'Brendon Hartley', team: 'Toyota Gazoo Racing', points: 105, nationality: 'New Zealand', wins: 2 },
-            { position: 3, driver: 'Kévin Estre', team: 'Porsche Penske Motorsport', points: 88, nationality: 'France', wins: 1 }
+            { position: 1, driver: 'Kyle Larson', team: 'Hendrick Motorsports', points: 110, nationality: 'United States', wins: 2 },
+            { position: 2, driver: 'Denny Hamlin', team: 'Joe Gibbs Racing', points: 105, nationality: 'United States', wins: 2 },
+            { position: 3, driver: 'Chase Elliott', team: 'Hendrick Motorsports', points: 98, nationality: 'United States', wins: 1 }
           ],
           teams: [
-            { position: 1, team: 'Toyota Gazoo Racing', points: 105, wins: 2 },
-            { position: 2, team: 'Porsche Penske Motorsport', points: 88, wins: 1 },
-            { position: 3, team: 'Ferrari AF Corse', points: 76, wins: 0 }
+            { position: 1, team: 'Hendrick Motorsports', points: 208, wins: 3 },
+            { position: 2, team: 'Joe Gibbs Racing', points: 175, wins: 2 }
+          ]
+        },
+        formula_e: {
+          drivers: [
+            { position: 1, driver: 'Jean-Éric Vergne', team: 'DS Penske', points: 88, nationality: 'France', wins: 1 },
+            { position: 2, driver: 'Nick Cassidy', team: 'Jaguar TCS Racing', points: 86, nationality: 'New Zealand', wins: 1 },
+            { position: 3, driver: 'Mitch Evans', team: 'Jaguar TCS Racing', points: 80, nationality: 'New Zealand', wins: 1 }
+          ],
+          teams: [
+            { position: 1, team: 'Jaguar TCS Racing', points: 166, wins: 2 },
+            { position: 2, team: 'DS Penske', points: 110, wins: 1 }
           ]
         }
       });
       setLoading(false);
-    }, 1000);
-  }, []);
+    }, 1000);  }, [seriesId]);
   
   const getActiveStandings = () => {
-    if (!standings[activeSeries]) {
+    // Mapping from seriesId to keys in our standings object
+    const seriesMapping = {
+      1: 'formula1',   // F1
+      2: 'indycar',    // IndyCar
+      3: 'nascar',     // NASCAR
+      4: 'formula_e'   // Formula E
+    };
+    
+    const seriesKey = seriesMapping[seriesId] || 'formula1';
+    
+    if (!standings[seriesKey]) {
       return [];
     }
-    return activeTab === 'drivers' ? standings[activeSeries].drivers : standings[activeSeries].teams;
+    return activeTab === 'drivers' ? standings[seriesKey].drivers : standings[seriesKey].teams;
   };
-  
-  const getSeriesName = (code) => {
-    const seriesMap = {
-      formula1: 'Formula 1',
-      indycar: 'IndyCar',
-      wec: 'World Endurance Championship'
-    };
-    return seriesMap[code] || code;
-  };
-  
   return (
     <div className="standings-page">
       <div className="page-header">
-        <h1>Championship Standings</h1>
-        
-        <div className="standings-series-tabs">
+        <div className="header-left">
           <button 
-            className={`series-tab ${activeSeries === 'formula1' ? 'active' : ''}`}
-            onClick={() => setActiveSeries('formula1')}
+            className="back-button"
+            onClick={() => navigate('/series')}
+            title="Back to series selection"
           >
-            Formula 1
-          </button>
-          <button 
-            className={`series-tab ${activeSeries === 'indycar' ? 'active' : ''}`}
-            onClick={() => setActiveSeries('indycar')}
-          >
-            IndyCar
-          </button>
-          <button 
-            className={`series-tab ${activeSeries === 'wec' ? 'active' : ''}`}
-            onClick={() => setActiveSeries('wec')}
-          >
-            WEC
+            <i className="fas fa-arrow-left"></i> Back to Series
           </button>
         </div>
-        
+        <h1>{series ? `${series.name} Standings` : 'Standings'}</h1>
         <div className="standings-type-tabs">
           <button 
-            className={`tab-btn ${activeTab === 'drivers' ? 'active' : ''}`}
+            className={`type-tab ${activeTab === 'drivers' ? 'active' : ''}`}
             onClick={() => setActiveTab('drivers')}
           >
             Drivers
           </button>
           <button 
-            className={`tab-btn ${activeTab === 'teams' ? 'active' : ''}`}
+            className={`type-tab ${activeTab === 'teams' ? 'active' : ''}`}
             onClick={() => setActiveTab('teams')}
           >
             Teams
           </button>
-        </div>
-      </div>
+        </div>      </div>
       
       {loading ? (
-        <LoadingSpinner message={`Loading ${getSeriesName(activeSeries)} standings...`} />
+        <LoadingSpinner message="Loading standings..." />
+      ) : error ? (
+        <div className="alert alert-error">{error}</div>
       ) : (
         <div className="standings-table-container">
           <h2 className="standings-title">
-            {getSeriesName(activeSeries)} {activeTab === 'drivers' ? 'Drivers' : 'Constructors'} Championship
+            {series ? series.name : ''} {activeTab === 'drivers' ? 'Drivers' : 'Constructors'} Championship
           </h2>
           
           <table className="standings-table">

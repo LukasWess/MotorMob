@@ -1,10 +1,19 @@
 .driver-card {
   border-radius: 8px;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.2s;
+  background-color: #1e1e1e; /* Dark background for dark theme */
+  color: #e0e0e0; /* Light text for dark theme */
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-align: center; /* Center text content */
 }
 
 .driver-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(-5px);
 }
 
 .driver-header {
@@ -12,14 +21,44 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  padding: 15px;
+  background: linear-gradient(to right, #0a0a0a, #1e1e1e); /* Dark gradient */
+  border-bottom: 1px solid #333;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding in width calculation */
+  text-align: center; /* Center text */
+}
+
+.header-left, .header-right {
+  flex: 1; /* Take up equal space on each side */
+  display: flex;
+  justify-content: flex-end; /* Push number to right */
+}
+
+.header-left {
+  justify-content: flex-start; /* Push content to left */
 }
 
 .driver-name {
   font-size: 20px;
   margin: 0;
-  color: #2c3e50;
+  color: #ffffff;
+  font-weight: 600;
+  text-align: center;
+  flex: 2; /* Take up more space to center properly */
+}
+
+.driver-number {
+  background-color: #ff6b6b; /* Red accent */
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .status-badge {
@@ -32,22 +71,25 @@
 }
 
 .status-active {
-  background-color: #e7f7ed;
-  color: #27ae60;
+  background-color: #2f9e44;
+  color: white;
 }
 
 .status-inactive {
-  background-color: #f8d7da;
-  color: #e74c3c;
+  background-color: #f03e3e;
+  color: white;
 }
 
 .status-on_leave {
-  background-color: #fff3cd;
-  color: #f39c12;
+  background-color: #f59f00;
+  color: white;
 }
 
 .driver-details {
-  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
 }
 
 .driver-details p {
@@ -55,24 +97,166 @@
   color: #555;
 }
 
+.driver-image {
+  height: 180px;
+  width: 180px;
+  background-size: cover;
+  background-position: center top;
+  border-radius: 50%; /* Make the image circular */
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid #1e1e1e; /* Add border matching card background */
+  margin: 0 auto 15px auto; /* Center horizontally and add bottom margin */
+}
+
+.driver-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.driver-image-container {
+  width: 100%;
+  padding: 15px 0;
+  text-align: center; /* Ensure center alignment */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.driver-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 15px;
+  width: 100%; /* Ensure full width */
+  text-align: center; /* Center text alignment */
+}
+
+.driver-team {
+  font-size: 14px;
+  margin: 10px 0;
+  color: #ff6b6b; /* Red accent */
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.driver-nationality-container {
+  padding: 0;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center; /* Center the nationality badge */
+}
+
+.driver-nationality {
+  display: inline-flex;
+  align-items: center;
+  background-color: #262626;
+  padding: 6px 12px;
+  border-radius: 20px; /* Rounded corners */
+  font-size: 14px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 1px #ff6b6b33; /* Subtle red outline */
+  color: #e0e0e0;
+  position: relative;
+}
+
+.nationality-flag {
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.driver-stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0 0 0;
+  padding: 15px;
+  border-top: 1px solid #333;
+  background-color: #1a1a1a; /* Slightly darker background for stats */
+  width: 100%;
+  margin-top: auto; /* Push to bottom of flex container */
+  box-sizing: border-box;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ff6b6b; /* Red accent */
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #adb5bd;
+  margin-top: 5px;
+}
+
 .driver-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center; /* Center buttons */
   gap: 10px;
   flex-wrap: wrap;
+  padding: 15px;
+  background-color: #262626;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  text-decoration: none;
 }
 
 .btn-primary {
-  background-color: #3498db;
+  background-color: #ff6b6b; /* Red accent */
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #2980b9;
+  background-color: #ff5252;
 }
 
-.driver-actions .btn {
-  text-decoration: none;
-  text-align: center;
-  display: inline-block;
+.btn-secondary {
+  background-color: #444444; /* Neutral dark gray instead of blue */
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #666666;
+}
+
+.btn-danger {
+  background-color: #f03e3e;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #e03131;
+}
+
+.btn-sm {
+  font-size: 14px;
+  padding: 6px 10px;
+}
+
+.driver-profile-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  box-sizing: border-box;
 }
