@@ -1,0 +1,87 @@
+/* events-grouped styles to optimize for wider center panel */
+.events-grouped {
+  padding: 15px 24px 30px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+  overflow-y: visible; /* Ensure no scrollbar appears here */
+}
+
+/* Event grouping by series */
+.series-group {
+  margin-bottom: 16px;
+}
+
+.series-events-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Fixed 4 columns for the wider layout */
+  gap: 16px;
+  margin-top: 10px;
+}
+
+/* Make the event cards adapt to the wider space in the center panel */
+.event-card {
+  height: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 0;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  min-height: 220px; /* Minimum height for consistent cards */
+}
+
+.event-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Adjust the tab filter bar to match FotMob design */
+.tab-filter-bar {
+  padding: 16px 24px 8px 24px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  border-bottom: none;
+}
+
+/* Style the content header to match FotMob design */
+.content-header {
+  padding: 16px 24px;
+  margin-bottom: 10px;
+}
+
+/* Responsive grid layout */
+@media (min-width: 1600px) {
+  .series-events-list {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns on very wide screens */
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .series-events-list {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on wide screens */
+    gap: 16px;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1199px) {
+  .series-events-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+  }
+  .events-grouped {
+    padding: 15px 20px;
+  }
+}
+
+@media (max-width: 899px) {
+  .series-events-list {
+    grid-template-columns: 1fr; /* 1 column on small screens */
+  }
+  .events-grouped {
+    padding: 10px 15px;
+  }
+}

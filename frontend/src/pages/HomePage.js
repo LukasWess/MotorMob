@@ -7,6 +7,7 @@ import NewsFeed from '../components/NewsFeed';
 import { images } from '../assets/images';
 import { mockUpcomingRaces, mockStandings, mockRacingSeries } from '../data/mockData';
 import '../styles/HomePage.css';
+import '../styles/EventsGrid.css';
 
 function HomePage() {
   const [upcomingRaces, setUpcomingRaces] = useState([]);
@@ -45,35 +46,7 @@ function HomePage() {
   };
 
   return (
-    <div className={`home-page ${darkMode ? 'dark' : 'light'}`}>
-      {/* Top Header Bar */}
-      <header className="top-header">
-        <div className="logo">
-          <h1>MOTORMOB</h1>
-        </div>
-        
-        <div className="search-container">
-          <input 
-            type="text" 
-            placeholder="Search events, drivers, teams..." 
-            className="search-input"
-          />
-          <button className="search-button">
-            <i className="fas fa-search"></i>
-          </button>
-        </div>
-        
-        <div className="header-actions">
-          <span className="news-text">NEWS</span>
-          <button 
-            className="theme-toggle" 
-            onClick={toggleDarkMode}
-            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            <i className={`fas ${darkMode ? 'fa-sun' : 'fa-moon'}`}></i>
-          </button>
-        </div>      </header>
-      
+    <div className={`home-page ${darkMode ? 'dark' : 'light'}`}>  
       {loading ? (
         <div className="loading-container">
           <div className="spinner"></div>
@@ -86,11 +59,11 @@ function HomePage() {
       ) : (
         <div className="three-column-layout">
           {/* Left Sidebar - Navigation */}
-          <div className="left-sidebar">
+          <div className="left-sidebar compact-sidebar dark-sidebar">
             <nav className="series-navigation">
               <ul>
                 {mockRacingSeries.map(series => (
-                  <li key={series.id}>
+                  <li key={series.id} className="series-list-item">
                     <Link to={`/series/${series.id}/drivers`} className="series-nav-item">
                       <span className="series-icon" style={{ color: series.primaryColor }}>
                         <i className="fas fa-flag-checkered"></i>
@@ -113,15 +86,22 @@ function HomePage() {
               </ul>
             </nav>
           </div>
-          
           {/* Center Panel - Main Content */}
-          <div className="center-panel">
+          <div className="center-panel homepage-center-panel dark-center-panel">
+            {/* Tab/Filter Bar */}
+            <div className="tab-filter-bar">
+              <button className="tab-btn active">Ongoing</button>
+              <button className="tab-btn">On TV</button>
+              <button className="tab-btn">By time</button>
+              <button className="tab-btn filter-btn">
+                <i className="fas fa-filter"></i> Filter
+              </button>
+            </div>
             <div className="content-header">
               <div className="today-label">
                 <h2>Today</h2>
                 <span className="date">{formatTodayDate()}</span>
               </div>
-              
               <div className="filter-dropdown">
                 <select className="filter-select">
                   <option value="all">All Events</option>
@@ -131,46 +111,52 @@ function HomePage() {
                 </select>
               </div>
             </div>
-            
-            <div className="events-grid">
-              <h3 className="events-title">Upcoming Events</h3>
-              {upcomingRaces.map((race, index) => (
-                <div className="event-card" key={race.id || index}>
-                  <div className="event-header" style={{ 
-                    backgroundColor: getMockSeriesColor(race.series) 
-                  }}>
-                    <span className="event-series">{race.series}</span>
-                    <span className="event-type">Race</span>
+            {/* Group events by series */}
+            <div className="events-grouped">
+              {Object.entries(groupRacesBySeries(upcomingRaces)).map(([series, races]) => (
+                <div className="series-group" key={series}>
+                  <div className="series-group-header">
+                    <span className="series-dot" style={{ backgroundColor: getMockSeriesColor(series) }}></span>
+                    <span className="series-title">{series}</span>
                   </div>
-                  <div className="event-body">
-                    <h4 className="event-name">{race.name}</h4>
-                    <div className="event-details">
-                      <div className="event-location">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <span>{race.location}</span>
+                  <div className="series-events-list">
+                    {races.map((race, index) => (
+                      <div className="event-card match-card dark-event-card" key={race.id || index}>
+                        <div className="event-header" style={{ backgroundColor: getMockSeriesColor(race.series) }}>
+                          <span className="event-series">{race.series}</span>
+                          <span className="event-type">Race</span>
+                        </div>
+                        <div className="event-body">
+                          <h4 className="event-name">{race.name}</h4>
+                          <div className="event-details">
+                            <div className="event-location">
+                              <i className="fas fa-map-marker-alt"></i>
+                              <span>{race.location}</span>
+                            </div>
+                            <div className="event-date">
+                              <i className="fas fa-calendar-alt"></i>
+                              <span>{race.date}</span>
+                            </div>
+                            <div className="event-circuit">
+                              <i className="fas fa-road"></i>
+                              <span>{race.circuit}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="event-footer">
+                          <Link to={`/races/${race.id}`} className="view-details-btn">
+                            View Details <i className="fas fa-arrow-right"></i>
+                          </Link>
+                        </div>
                       </div>
-                      <div className="event-date">
-                        <i className="fas fa-calendar-alt"></i>
-                        <span>{race.date}</span>
-                      </div>
-                      <div className="event-circuit">
-                        <i className="fas fa-road"></i>
-                        <span>{race.circuit}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="event-footer">
-                    <Link to={`/races/${race.id}`} className="view-details-btn">
-                      View Details <i className="fas fa-arrow-right"></i>
-                    </Link>
+                    ))}
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          
-          {/* Right Sidebar - News */}
-          <div className="right-sidebar">
+          {/* Right Sidebar - News and League Table */}
+          <div className="right-sidebar compact-sidebar dark-sidebar">
             <div className="news-header">
               <h2>NEWS</h2>
               <a href="#" className="view-all-link">View All</a>
@@ -178,10 +164,31 @@ function HomePage() {
             <div className="news-feed-container">
               <NewsFeed compact={true} />
             </div>
+            <div className="league-table-container dark-league-table">
+              <h3 className="league-table-title">Premier League</h3>
+              <table className="league-table">
+                <thead>
+                  <tr>
+                    <th>Pos</th>
+                    <th>Team</th>
+                    <th>PL</th>
+                    <th>GD</th>
+                    <th>PTS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Example static data, replace with real data as needed */}
+                  <tr><td>1</td><td>Liverpool</td><td>36</td><td>+49</td><td>83</td></tr>
+                  <tr><td>2</td><td>Arsenal</td><td>36</td><td>+33</td><td>68</td></tr>
+                  <tr><td>3</td><td>Newcastle</td><td>36</td><td>+23</td><td>66</td></tr>
+                  <tr><td>4</td><td>Man City</td><td>36</td><td>+29</td><td>65</td></tr>
+                  <tr><td>5</td><td>Chelsea</td><td>36</td><td>+27</td><td>63</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
-      
       {/* Uncomment to test API connection */}
       {/* <ConnectionTest /> */}
     </div>
@@ -200,6 +207,14 @@ function HomePage() {
     return seriesMap[seriesName] || '#333333';
   }
 
+  // Helper function to group races by series
+  function groupRacesBySeries(races) {
+    return races.reduce((acc, race) => {
+      if (!acc[race.series]) acc[race.series] = [];
+      acc[race.series].push(race);
+      return acc;
+    }, {});
+  }
 }
 
 export default HomePage;
