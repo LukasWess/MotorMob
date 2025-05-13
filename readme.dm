@@ -30,3 +30,24 @@ MotorMob is a modern motorsport dashboard application designed to provide users 
 - **Routing**: React Router
 
 ---
+
+🤝 Contributing
+Contributions are welcome! If you'd like to improve this project:
+
+Fork the repository.
+Create a new branch (git checkout -b feature-name).
+Commit your changes (git commit -m "Add feature").
+Push to the branch (git push origin feature-name).
+Open a pull request.
+📜 License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+🌟 Acknowledgments
+React for the frontend framework.
+Tailwind CSS for the styling.
+Motorsport fans for inspiring this project.
+📧 Contact
+For questions or feedback, feel free to reach out:
+
+Email: Lukas25@live.no
+GitHub: LukasWess
