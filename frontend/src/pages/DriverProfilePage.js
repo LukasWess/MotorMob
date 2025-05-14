@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { motorsportService } from '../services/api.js';
+import { driverService } from '../services/api.js';
 import { images } from '../assets/images';
-// Import mockDrivers directly - we'll use other methods to ensure refreshing
-import { mockDrivers } from '../data/mockData';
 import '../styles/DriverProfilePage.css';
 
 function DriverProfilePage() {
@@ -18,35 +16,16 @@ function DriverProfilePage() {
     setLoading(true);
     fetchDriverProfile();
   };
-  
-  // Function to fetch driver data (either from API or mockData)
+    // Function to fetch driver data from API
   const fetchDriverProfile = async () => {
     try {
-      // Try API first
-      try {
-        const data = await motorsportService.getDriverProfile(id);
-        setDriver(data);
-        setLoading(false);
-        return;
-      } catch (apiError) {
-        console.log('API not available, using mock data', apiError);
-      }
-      
-      // Fall back to mock data if API fails
-      // This will always use the latest imported mockDrivers from the module
-      const driverFound = mockDrivers.find(driver => driver.id.toString() === id);
-      
-      if (driverFound) {
-        console.log('Using mock data for driver:', driverFound.name);
-        setDriver({ ...driverFound }); // Clone to ensure we have a fresh object
-        setLoading(false);
-      } else {
-        setError("Driver not found");
-        setLoading(false);
-      }
+      const data = await driverService.getDriverById(id);
+      setDriver(data);
+      setError(null);
     } catch (error) {
       console.error('Error loading driver profile:', error);
       setError("Failed to load driver profile");
+    } finally {
       setLoading(false);
     }
   };

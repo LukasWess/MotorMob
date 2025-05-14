@@ -10,7 +10,11 @@ const {
   mockRaces, 
   mockUpcomingRaces, 
   mockStandings,
-  mockNews
+  mockNews,
+  mockRacingSeries,
+  mockRacesBySeries,
+  mockRaceCalendar,
+  mockRaceResults
 } = require('../data/mockData');
 
 // GET driver profile
@@ -356,6 +360,68 @@ router.get('/races/:id', async (req, res) => {
     res.json(race);
   } catch (error) {
     console.error('Error fetching race details:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET racing series
+router.get('/series', (req, res) => {
+  try {
+    res.json(mockRacingSeries);
+  } catch (error) {
+    console.error('Error fetching racing series:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET racing series by ID
+router.get('/series/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const series = mockRacingSeries.find(s => s.id === parseInt(id));
+    if (!series) {
+      return res.status(404).json({ message: 'Racing series not found' });
+    }
+    res.json(series);
+  } catch (error) {
+    console.error('Error fetching racing series:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET races by series
+router.get('/series/:id/races', (req, res) => {
+  try {
+    const { id } = req.params;
+    const races = mockRacesBySeries[id] || [];
+    res.json(races);
+  } catch (error) {
+    console.error('Error fetching races by series:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET race calendar
+router.get('/race-calendar', (req, res) => {
+  try {
+    res.json(mockRaceCalendar);
+  } catch (error) {
+    console.error('Error fetching race calendar:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// GET race results
+router.get('/race-results/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const results = mockRaceResults[id];
+    if (!results) {
+      return res.status(404).json({ message: 'Race results not found' });
+    }
+    res.json(results);
+  } catch (error) {
+    console.error('Error fetching race results:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

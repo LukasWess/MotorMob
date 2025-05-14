@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import NewsItem from './NewsItem';
-import { mockNews } from '../data/mockData';
+import { motorsportService } from '../services/api';
 import '../styles/NewsFeed.css';
 
 function NewsFeed() {
@@ -10,17 +10,20 @@ function NewsFeed() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate loading delay for better UX
-    setTimeout(() => {
+    const fetchNews = async () => {
       try {
-        // Use mock data
-        setNewsItems(mockNews.slice(0, 3));
-        setLoading(false);
+        const data = await motorsportService.getLatestNews(3);
+        setNewsItems(data);
+        setError(null);
       } catch (error) {
+        console.error('Error fetching news:', error);
         setError('Failed to load news. Please try again later.');
+      } finally {
         setLoading(false);
       }
-    }, 500);
+    };
+    
+    fetchNews();
   }, []);
 
   return (

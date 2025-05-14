@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { driverService } from '../services/api.js';
-import { mockDrivers, mockRacingSeries } from '../data/mockData';
+import { driverService, seriesService } from '../services/api.js';
 import DriverCard from '../components/DriverCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/DriversPage.css';
@@ -20,42 +19,39 @@ function DriversPage() {
     phoneNumber: '',
     email: '',
     status: 'active'
-  });
-  // Fetch all drivers when component mounts
+  });  // Fetch all drivers when component mounts
   useEffect(() => {
-    // Find the series information
-    const currentSeries = mockRacingSeries.find(s => s.id === parseInt(seriesId));
-    if (!currentSeries) {
-      setError('Racing series not found');
-      setLoading(false);
-      return;
-    }
+    const fetchSeriesAndDrivers = async () => {
+      // Find the series information
+      try {
+        const currentSeries = await seriesService.getSeriesById(seriesId);
+        if (!currentSeries) {
+          setError('Racing series not found');
+          setLoading(false);
+          return;
+        }
+        
+        setSeries(currentSeries);
+        fetchDrivers();
+      } catch (err) {
+        console.error('Error fetching series:', err);
+        setError('Racing series not found');
+        setLoading(false);
+      }
+    };
     
-    setSeries(currentSeries);
-    fetchDrivers();
+    fetchSeriesAndDrivers();
   }, [seriesId]);
   
   // Function to fetch drivers from API
   const fetchDrivers = async () => {
     try {
       setLoading(true);
-      // Try API first
-      try {
-        const data = await driverService.getAllDrivers();
-        // Filter by series ID
-        const filteredData = data.filter(driver => driver.seriesId === parseInt(seriesId));
-        setDrivers(filteredData);
-        setError(null);
-        setLoading(false);
-        return;
-      } catch (apiError) {
-        console.log('API not available, using mock data', apiError);
-      }
-      
-      // Fall back to mock data if API fails
-      console.log('Using mock drivers data');
-      const filteredMockDrivers = mockDrivers.filter(driver => driver.seriesId === parseInt(seriesId));
-      setDrivers(filteredMockDrivers);
+      // Try API
+      const data = await driverService.getAllDrivers();
+      // Filter by series ID
+      const filteredData = data.filter(driver => driver.seriesId === parseInt(seriesId));
+      setDrivers(filteredData);
       setError(null);
     } catch (err) {
       setError('Failed to load drivers. Please try again later.');

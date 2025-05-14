@@ -1,9 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { mockRacingSeries } from '../data/mockData';
+import { seriesService } from '../services/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/RacingSeriesPage.css';
 
 function RacingSeriesPage() {
+  const [series, setSeries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSeries = async () => {
+      try {
+        const data = await seriesService.getAllSeries();
+        setSeries(data);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching racing series:', error);
+        setError('Failed to load racing series. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSeries();
+  }, []);
+
+  if (loading) {
+    return <div className="loading-container"><LoadingSpinner /></div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
+
   return (
     <div className="racing-series-page">
       <div className="page-header">
@@ -12,7 +42,7 @@ function RacingSeriesPage() {
       </div>
       
       <div className="series-grid">
-        {mockRacingSeries.map(series => (
+        {series.map(series => (
           <Link to={`/series/${series.id}/drivers`} key={series.id} className="series-card-link">
             <div className="series-card" style={{ borderColor: series.primaryColor }}>
               <div className="series-logo-container">

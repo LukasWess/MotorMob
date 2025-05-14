@@ -282,10 +282,200 @@ const mockNews = [
   }
 ];
 
+// Mock racing series data
+const mockRacingSeries = [
+  {
+    id: 1,
+    name: "Formula 1",
+    shortName: "F1",
+    description: "The pinnacle of motorsport, featuring the fastest circuit racing cars in the world.",
+    logo: "https://via.placeholder.com/300x150?text=Formula+1",
+    primaryColor: "#e10600", // F1 red
+    driversCount: 20
+  },
+  {
+    id: 2,
+    name: "IndyCar Series",
+    shortName: "IndyCar",
+    description: "The premier level of open-wheel racing in North America, known for its high-speed oval races and road courses.",
+    logo: "https://via.placeholder.com/300x150?text=IndyCar",
+    primaryColor: "#1447b5", // IndyCar blue
+    driversCount: 24
+  },
+  {
+    id: 3,
+    name: "NASCAR Cup Series",
+    shortName: "NASCAR",
+    description: "America's most popular stock car racing championship, featuring close racing and high-speed ovals.",
+    logo: "https://via.placeholder.com/300x150?text=NASCAR",
+    primaryColor: "#ffd659", // NASCAR yellow
+    driversCount: 36
+  },
+  {
+    id: 4,
+    name: "Formula E",
+    shortName: "FE",
+    description: "An electric street racing series showcasing innovation and sustainability in motorsport.",
+    logo: "https://via.placeholder.com/300x150?text=Formula+E",
+    primaryColor: "#14b5a0", // Formula E teal
+    driversCount: 22
+  }
+];
+
+// Mock races for each racing series
+const mockRacesBySeries = {
+  // Formula 1 races (seriesId: 1)
+  "1": [
+    {
+      id: 101,
+      name: "Monaco Grand Prix",
+      circuit: "Circuit de Monaco",
+      date: "May 25, 2025",
+      location: "Monte Carlo, Monaco",
+      image: "https://via.placeholder.com/400x250?text=Monaco"
+    },
+    {
+      id: 102,
+      name: "Australian Grand Prix",
+      circuit: "Albert Park Circuit",
+      date: "June 15, 2025",
+      location: "Melbourne, Australia",
+      image: "https://via.placeholder.com/400x250?text=Melbourne"
+    },
+    {
+      id: 103,
+      name: "Chinese Grand Prix",
+      circuit: "Shanghai International Circuit",
+      date: "June 29, 2025",
+      location: "Shanghai, China",
+      image: "https://via.placeholder.com/400x250?text=Shanghai"
+    }
+  ],
+  
+  // IndyCar races (seriesId: 2)
+  "2": [
+    {
+      id: 201,
+      name: "Indianapolis 500",
+      circuit: "Indianapolis Motor Speedway",
+      date: "May 26, 2025",
+      location: "Indianapolis, USA",
+      image: "https://via.placeholder.com/400x250?text=Indianapolis"
+    },
+    {
+      id: 202,
+      name: "Long Beach Grand Prix",
+      circuit: "Long Beach Street Circuit",
+      date: "June 7, 2025",
+      location: "Long Beach, California, USA",
+      image: "https://via.placeholder.com/400x250?text=LongBeach"
+    }
+  ],
+  
+  // NASCAR races (seriesId: 3)
+  "3": [
+    {
+      id: 301,
+      name: "Daytona 500",
+      circuit: "Daytona International Speedway",
+      date: "May 22, 2025",
+      location: "Daytona Beach, Florida, USA",
+      image: "https://via.placeholder.com/400x250?text=Daytona"
+    },
+    {
+      id: 302,
+      name: "Coca-Cola 600",
+      circuit: "Charlotte Motor Speedway",
+      date: "June 12, 2025",
+      location: "Concord, North Carolina, USA",
+      image: "https://via.placeholder.com/400x250?text=Charlotte"
+    }
+  ],
+  
+  // Formula E races (seriesId: 4)
+  "4": [
+    {
+      id: 401,
+      name: "London E-Prix",
+      circuit: "ExCeL London Circuit",
+      date: "May 30, 2025",
+      location: "London, UK",
+      image: "https://via.placeholder.com/400x250?text=London"
+    },
+    {
+      id: 402,
+      name: "Monaco E-Prix",
+      circuit: "Circuit de Monaco",
+      date: "June 20, 2025",
+      location: "Monte Carlo, Monaco",
+      image: "https://via.placeholder.com/400x250?text=MonacoE"
+    }
+  ]
+};
+
+// Mock race calendar
+const mockRaceCalendar = [
+  {
+    id: 1,
+    name: "Monaco Grand Prix",
+    circuit: "Circuit de Monaco",
+    date: "May 25, 2025",
+    location: "Monte Carlo, Monaco",
+    series: "Formula 1"
+  },
+  {
+    id: 2,
+    name: "Indianapolis 500",
+    circuit: "Indianapolis Motor Speedway",
+    date: "May 26, 2025",
+    location: "Indianapolis, USA",
+    series: "IndyCar"
+  },
+  {
+    id: 3,
+    name: "Nürburgring 24 Hours",
+    circuit: "Nürburgring Nordschleife",
+    date: "June 1, 2025",
+    location: "Nürburg, Germany",
+    series: "GT Racing"
+  },
+  {
+    id: 4,
+    name: "Australian Grand Prix",
+    circuit: "Albert Park Circuit",
+    date: "June 15, 2025",
+    location: "Melbourne, Australia",
+    series: "Formula 1"
+  },
+  {
+    id: 5,
+    name: "Chinese Grand Prix",
+    circuit: "Shanghai International Circuit",
+    date: "June 29, 2025",
+    location: "Shanghai, China",
+    series: "Formula 1"
+  }
+];
+
+// Mock race results
+const mockRaceResults = {
+  "1": [
+    { position: 1, driver: "Max Verstappen", team: "Red Bull Racing", time: "1:32:45.567", points: 25 },
+    { position: 2, driver: "Lewis Hamilton", team: "Mercedes", time: "+5.231s", points: 18 },
+    { position: 3, driver: "Charles Leclerc", team: "Ferrari", time: "+7.126s", points: 15 },
+    { position: 4, driver: "Carlos Sainz", team: "Ferrari", time: "+12.359s", points: 12 },
+    { position: 5, driver: "Lando Norris", team: "McLaren", time: "+14.752s", points: 10 }
+  ]
+};
+
 module.exports = {
   mockDrivers,
   mockRaces,
   mockUpcomingRaces,
   mockStandings,
-  mockNews
+  mockNews,
+  mockRacingSeries,
+  mockRacesBySeries,
+  mockRaceCalendar,
+  mockRaceResults
 };

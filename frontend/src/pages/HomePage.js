@@ -5,31 +5,37 @@ import UpcomingRaces from '../components/UpcomingRaces';
 import TopDrivers from '../components/TopDrivers';
 import NewsFeed from '../components/NewsFeed';
 import { images } from '../assets/images';
-import { mockUpcomingRaces, mockStandings, mockRacingSeries } from '../data/mockData';
+import { motorsportService, seriesService } from '../services/api';
 import '../styles/HomePage.css';
 import '../styles/EventsGrid.css';
 
-function HomePage() {
-  const [upcomingRaces, setUpcomingRaces] = useState([]);
+function HomePage() {  const [upcomingRaces, setUpcomingRaces] = useState([]);
   const [topDrivers, setTopDrivers] = useState([]);
+  const [series, setSeries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
 
-  useEffect(() => {
-    // Simulate data fetching delay
-    setTimeout(() => {
+  useEffect(() => {    const fetchData = async () => {
       try {
-        // Use mock data
-        setUpcomingRaces(mockUpcomingRaces);
-        setTopDrivers(mockStandings);
+        // Fetch data from the API
+        const racesData = await motorsportService.getUpcomingRaces();
+        const standingsData = await motorsportService.getStandings();
+        const seriesData = await seriesService.getAllSeries();
+        
+        setUpcomingRaces(racesData);
+        setTopDrivers(standingsData);
+        setSeries(seriesData);
         setLoading(false);
       } catch (error) {
         console.error('Error loading data:', error);
-        setError('Failed to load data. Please try again later.');
+        // Fallback to mock data (handled by components)
+        setError('Failed to connect to API. Using cached data.');
         setLoading(false);
       }
-    }, 800);
+    };
+    
+    fetchData();
   }, []);
 
   // Toggle dark/light mode
@@ -58,11 +64,10 @@ function HomePage() {
         </div>
       ) : (
         <div className="three-column-layout">
-          {/* Left Sidebar - Navigation */}
-          <div className="left-sidebar compact-sidebar dark-sidebar">
+          {/* Left Sidebar - Navigation */}          <div className="left-sidebar compact-sidebar dark-sidebar">
             <nav className="series-navigation">
               <ul>
-                {mockRacingSeries.map(series => (
+                {series.map(series => (
                   <li key={series.id} className="series-list-item">
                     <Link to={`/series/${series.id}/drivers`} className="series-nav-item">
                       <span className="series-icon" style={{ color: series.primaryColor }}>

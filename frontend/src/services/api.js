@@ -135,5 +135,66 @@ export const motorsportService = {
   }
 };
 
+// Racing series service
+export const seriesService = {
+  // Get all racing series
+  getAllSeries: async () => {
+    try {
+      const response = await api.get('/motorsport/series');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching racing series:', error);
+      throw error;
+    }
+  },
+  
+  // Get series by ID
+  getSeriesById: async (id) => {
+    try {
+      const response = await api.get(`/motorsport/series/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching series ${id}:`, error);
+      throw error;
+    }
+  },
+  
+  // Get races by series ID
+  getRacesBySeries: async (seriesId) => {
+    try {
+      const response = await api.get(`/motorsport/series/${seriesId}/races`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching races for series ${seriesId}:`, error);
+      throw error;
+    }
+  }
+};
+
+// Race results service
+export const raceService = {
+  // Get race results by race ID
+  getRaceResults: async (raceId) => {
+    try {
+      const response = await api.get(`/motorsport/race-results/${raceId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching results for race ${raceId}:`, error);
+      throw error;
+    }
+  },
+  
+  // Get race calendar
+  getRaceCalendar: async () => {
+    try {
+      const response = await api.get('/motorsport/race-calendar');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching race calendar:', error);
+      throw error;
+    }
+  }
+};
+
 // Export the default axios instance
 export default api;

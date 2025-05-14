@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { images } from '../assets/images';
-import { mockRacesBySeries, mockRacingSeries } from '../data/mockData';
+import { seriesService } from '../services/api';
 import '../styles/RacesPage.css';
 
 function RacesPage() {
@@ -13,22 +13,22 @@ function RacesPage() {
   const [series, setSeries] = useState(null);
   const [activeTab, setActiveTab] = useState('upcoming');
   const [error, setError] = useState(null);
-    useEffect(() => {
-    // Find the series information
-    const currentSeries = mockRacingSeries.find(s => s.id === parseInt(seriesId));
-    if (!currentSeries) {
-      setError('Racing series not found');
-      setLoading(false);
-      return;
-    }
-    
-    setSeries(currentSeries);
-    
-    // Simulate data fetching delay
-    setTimeout(() => {
+  
+  useEffect(() => {
+    const fetchSeriesAndRaces = async () => {
       try {
+        // Get series info
+        const currentSeries = await seriesService.getSeriesById(seriesId);
+        if (!currentSeries) {
+          setError('Racing series not found');
+          setLoading(false);
+          return;
+        }
+        
+        setSeries(currentSeries);
+        
         // Get races for this series
-        const seriesRaces = mockRacesBySeries[seriesId] || [];
+        const seriesRaces = await seriesService.getRacesBySeries(seriesId);
         
         // Add status property to races
         const currentDate = new Date();
@@ -38,15 +38,16 @@ function RacesPage() {
           thumbnail: images.circuits[race.circuit?.toLowerCase().replace(/\s+/g, '')] || 
                     'https://via.placeholder.com/400x250?text=' + race.circuit
         }));
-        
-        setRaces(formattedRaces);
+          setRaces(formattedRaces);
         setLoading(false);
       } catch (error) {
         console.error('Error loading races:', error);
         setError('Failed to load races. Please try again later.');
         setLoading(false);
       }
-    }, 800);
+    };
+    
+    fetchSeriesAndRaces();
   }, [seriesId]);
   
   const filteredRaces = races.filter(race => 
